@@ -185,7 +185,7 @@ const Explore = ({ navigation }) => {
  
   renderUsers = () => {
     return imageData.map((item,index) => {
-      return(
+      var component = (
         <Animated.View {...panResponder.panHandlers}  key={item.id} style={[rotateTranslate,{height:SCREEN_HEIGHT-220,width:SCREEN_WIDTH, padding:10, position:'absolute'}]}>
           <TouchableWithoutFeedback onPress={()=> {navigation.navigate('User', {userId: item.authorId})}} style={{position:'absolute', zIndex:100}}>
             <Text style={{top: SCREEN_HEIGHT-290, left: 15, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.author}</Text>
@@ -205,9 +205,28 @@ const Explore = ({ navigation }) => {
           </Animated.View>
           
         </Animated.View>
+      )
+      
+      if (index != imageData.length - 1)
+      {
+        component =
+        (<View  key={item.id} style={{height:SCREEN_HEIGHT-220,width:SCREEN_WIDTH, padding:10, position:'absolute'}}>
+        <TouchableWithoutFeedback onPress={()=> {navigation.navigate('User', {userId: item.authorId})}} style={{position:'absolute', zIndex:100}}>
+          <Text style={{top: SCREEN_HEIGHT-290, left: 15, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.author}</Text>
+        </TouchableWithoutFeedback>
 
-
-
+        <Text style={{top: SCREEN_HEIGHT-255, left: 22, color:'white', position:'absolute', zIndex:100, borderColor:'black'}}>
+          {item.posted}
+        </Text>
+          <Image style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:10}} source={item.uri}/> 
+          {/* //source={{uri: item.url}} */}
+        
+      </View>)
+      }
+      return(
+        <View key={item.id}>
+          { component }
+        </View>
       )
     })
   }
