@@ -68,7 +68,7 @@ const AddButton = ({ navigation }) => {
 
 
 
-
+    //console.log(navigation);
     return(
         
         <View style={{position:'absolute',alignItems:'center'}}>
@@ -90,13 +90,13 @@ const AddButton = ({ navigation }) => {
             </Animated.View>
 
             <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite" iterationDelay={500}>
-                <Animated.View style={[ styles.button, sizeStyle ]}>
-                    <TouchableHighlight onPress={()=>Haptics.impactAsync('medium')} onPressIn={handlePress} underlayColor='red'>
+                <TouchableHighlight onPress={()=>Haptics.impactAsync('medium')} onPressIn={handlePress} underlayColor='transparent'>
+                    <Animated.View style={[ styles.button, sizeStyle ]}> 
                         <Animated.View style={{transform: [{ rotate: rotation }]}}>
                             <AntDesign name='plus' size={24} color='white'/>
                         </Animated.View>
-                    </TouchableHighlight>
-                </Animated.View>
+                    </Animated.View>
+                </TouchableHighlight>
             </Animatable.View>
 
         </View>

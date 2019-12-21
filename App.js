@@ -31,9 +31,43 @@ import AddButton from './components/AddButton'
 
 
 import {Feather, AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
+const BottomTabNav = createBottomTabNavigator({
+  'Gallery':Explore,
+  'Upload': Upload,
+  'Profile': Profile
+},
+{
+  tabBarComponent: ({navigation}) => {
+    let tintColor = "black";
+    return (
+    <View style={{ height: 70, width: "100%", display: "flex", flexDirection: "row", backgroundColor:'#eee' }}>
+        <View style={{ flex: 1 }}>
+         <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}} style={{}}>
+           <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10}}>
+              <MaterialIcons name='view-headline' size={32} color={tintColor}/>
+            </View>
+          </TouchableOpacity>
+        </View>
 
+        <View style={{flex:1, display:'flex', alignItems:'center', top:-30}}>
+          <AddButton navigation={ navigation }/>
+        </View>
+
+       <View style={{ flex: 1 }}>
+         <TouchableOpacity onPress={()=> { navigation.navigate('Profile')}} style={{}}>
+           <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10 }}>
+              <Feather  name='user' size={32} color={tintColor}/>
+            </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+    )
+  }
+}
+)
 
 
 
@@ -54,7 +88,7 @@ const TabStack = createBottomTabNavigator(
       navigationOptions:{
         tabBarVisible: false,
         tabBarIcon: ({ tintColor }) => (
-          <AddButton/>
+          <AddButton />
           
         ) //TAB BAR ON PRESS
       }
@@ -93,7 +127,7 @@ const MainStack = createStackNavigator(
   {
     Home:
     {
-      screen: TabStack,
+      screen: BottomTabNav,
       navigationOptions: {}
     },
     User:
@@ -117,7 +151,7 @@ const MainStack = createStackNavigator(
 
 
 
-const TabContainer =  createAppContainer(TabStack)
+const TabContainer =  createAppContainer(BottomTabNav)
 const StackContainer = createAppContainer(MainStack)
 
 

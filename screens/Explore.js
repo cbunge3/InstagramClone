@@ -4,7 +4,8 @@ import * as Font from 'expo-font';
 
 import { f, auth, database, storage } from "../config/config";
 import { AppLoading } from "expo";
-// import { DeckSwiper } from 'native-base'
+
+import useStateWithCallback from 'use-state-with-callback'
 
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -17,29 +18,14 @@ fetchFonts = () => {
 
 
 const Explore = ({ navigation }) => {
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(true);
   const [imageArray, setImageArray] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [fontloaded, setFontLoaded ] = useState(false)
-  const [pan] = useState(new Animated.ValueXY())
-  
+  const [pan, setPan] = useState(new Animated.ValueXY())
+  const [ currentIndex, setCurrentIndex ] = useState(0)
 
 
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-
-    onPanResponderMove: Animated.event([null, {
-      dx  : pan.x,
-      dy  : pan.y
-    }], {
-    }),
-    onPanResponderRelease: (e, gesture) => {
-        Animated.spring(
-          pan,
-          {toValue:{x:0,y:0}}
-        ).start();
-    }
-  });
 
   const rotate = pan.x.interpolate({
     inputRange:[-SCREEN_WIDTH/2,0,SCREEN_WIDTH/2],
@@ -54,8 +40,6 @@ const Explore = ({ navigation }) => {
   ]
   }
 
-
-
   const likeOpacity = pan.x.interpolate({
     inputRange:[-SCREEN_WIDTH/2,0,SCREEN_WIDTH],
     outputRange:[0,0,1],
@@ -68,11 +52,70 @@ const Explore = ({ navigation }) => {
     extrapolate:'clamp'
   })
 
+  const nextCardOpacity = pan.x.interpolate({
+    inputRange:[-SCREEN_WIDTH/2,0,SCREEN_WIDTH],
+    outputRange:[1,0,1],
+    extrapolate:'clamp'
+  })
+
+  const nextCardScale = pan.x.interpolate({
+    inputRange:[-SCREEN_WIDTH/2,0,SCREEN_WIDTH],
+    outputRange:[1,0.8,1],
+    extrapolate:'clamp'
+  })
+  
+  
+  
+  
+  
+  useEffect(()=> {
+
+  
+  panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+
+    onPanResponderMove: Animated.event([null, {
+      dx  : pan.x,
+      dy  : pan.y
+    }], {
+    }),
+    onPanResponderRelease: (e, gesture) => {
+
+      if(gesture.dx > 120){
+        Animated.spring(pan,
+          {
+            toValue:{x:SCREEN_WIDTH+100,y:gesture.dy}
+          }).start(()=> {setCurrentIndex(currentIndex)})
+          
+          
+      } else if( gesture.dx < -120){
+        Animated.spring(pan,
+          {
+            toValue:{x:-SCREEN_WIDTH-100,y:gesture.dy}
+          }).start(()=> {setCurrentIndex(currentIndex)})
+            
+  
+      } else {
+        Animated.spring(
+          pan,
+          {toValue:{x:0,y:0}, friction:4},
+        ).start();
+      }
+
+    }
+  });
+  },[])
 
 
-  useEffect(() => {
-    loadMore()
-  }, []);
+
+
+  
+
+
+
+  // useEffect(() => {
+  //   loadMore()
+  // }, []);
 
 
 
@@ -93,7 +136,7 @@ const Explore = ({ navigation }) => {
 
   timeConverter = timestamp => {
     let a = new Date(timestamp * 1000);
-    console.log(a);
+  
     let seconds = Math.floor((new Date() - a) / 1000);
 
     let interval = Math.floor(seconds / 31536000);
@@ -155,8 +198,6 @@ const Explore = ({ navigation }) => {
                 author: data,
                 authorId: imageObj.author
               });
-              console.log(imageFeed)
-              console.log(imageArray)
               
 
               setRefresh(false);
@@ -174,61 +215,69 @@ const Explore = ({ navigation }) => {
 
   // --------- TEST DATA --------- //
   const imageData = [
-    {id:'one', uri: require('../assets/pic1.jpeg')},
-    {id:'two', uri: require('../assets/pic2.jpeg')},
-    {id:'three', uri: require('../assets/pic3.jpeg')},
-    {id:'four', uri: require('../assets/pic5.jpeg')},
-    {id:'five', uri: require('../assets/puppy.jpg')},
-].reverse()
+    {id:0, uri: require('../assets/pic1.jpeg'), name: 'Marissa'},
+    {id:1, uri: require('../assets/pic2.jpeg'), name: 'John'},
+    {id:2, uri: require('../assets/pic3.jpeg'), name: 'Hannah'},
+    {id:3, uri: require('../assets/pic5.jpeg'), name: 'Wade'},
+    {id:4, uri: require('../assets/puppy.jpg'), name: 'Puppy'},
+    {id:5, uri: require('../assets/pic1.jpeg'), name: 'Lisa'},
+    {id:6, uri: require('../assets/pic2.jpeg'), name: 'Andrew'},
+    {id:7, uri: require('../assets/pic3.jpeg'), name: 'May'},
+]
 
 // ------------ END OF TEST DATA ------------- //
  
   renderUsers = () => {
     return imageData.map((item,index) => {
-      var component = (
-        <Animated.View {...panResponder.panHandlers}  key={item.id} style={[rotateTranslate,{height:SCREEN_HEIGHT-220,width:SCREEN_WIDTH, padding:10, position:'absolute'}]}>
-          <TouchableWithoutFeedback onPress={()=> {navigation.navigate('User', {userId: item.authorId})}} style={{position:'absolute', zIndex:100}}>
-            <Text style={{top: SCREEN_HEIGHT-290, left: 15, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.author}</Text>
-          </TouchableWithoutFeedback>
-
-          <Text style={{top: SCREEN_HEIGHT-255, left: 22, color:'white', position:'absolute', zIndex:100, borderColor:'black'}}>
-            {item.posted}
-          </Text>
-            <Image style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:10}} source={item.uri}/> 
-            {/* //source={{uri: item.url}} */}
-          <Animated.View style={{opacity:likeOpacity, transform:[{rotate:'-30deg'}] ,position: 'absolute', top:50, left: 40 , zindex: 150}}>
-            <FontAwesome name='thumbs-up' size={70} color='#00FF7F'/>
-          </Animated.View>
-
-          <Animated.View style={{ opacity:dislikeOpacity, transform:[{rotate:'30deg'}] ,position: 'absolute', top:50, right: 40 , zindex: 150}}>
-            <FontAwesome name='thumbs-down' size={70} color='red'/>
-          </Animated.View>
-          
-        </Animated.View>
-      )
-      
-      if (index != imageData.length - 1)
+      if( index < currentIndex  )
       {
-        component =
-        (<View  key={item.id} style={{height:SCREEN_HEIGHT-220,width:SCREEN_WIDTH, padding:10, position:'absolute'}}>
-        <TouchableWithoutFeedback onPress={()=> {navigation.navigate('User', {userId: item.authorId})}} style={{position:'absolute', zIndex:100}}>
-          <Text style={{top: SCREEN_HEIGHT-290, left: 15, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.author}</Text>
-        </TouchableWithoutFeedback>
-
-        <Text style={{top: SCREEN_HEIGHT-255, left: 22, color:'white', position:'absolute', zIndex:100, borderColor:'black'}}>
-          {item.posted}
-        </Text>
-          <Image style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:10}} source={item.uri}/> 
-          {/* //source={{uri: item.url}} */}
-        
-      </View>)
+        return null
       }
-      return(
-        <View key={item.id}>
-          { component }
-        </View>
-      )
-    })
+      else if (index == currentIndex) {
+        return(
+          <Animated.View {...panResponder.panHandlers}  key={index} style={[ rotateTranslate, {height:SCREEN_HEIGHT-220,width:SCREEN_WIDTH, padding:10, position:'absolute'}]}>
+
+            <TouchableWithoutFeedback onPress={()=> {navigation.navigate('Profile')}} style={{position:'absolute', zIndex:100}}>
+              <Text style={{top: SCREEN_HEIGHT-290, left: 15, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.name}</Text>
+            </TouchableWithoutFeedback>
+
+            <Text style={{top: SCREEN_HEIGHT-255, left: 22, color:'white', position:'absolute', zIndex:100, borderColor:'black'}}>
+              12 Days Ago
+            </Text>
+              <Image style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:10}} source={item.uri}/> 
+              {/* //source={{uri: item.url}} */}
+            <Animated.View style={{opacity:likeOpacity, transform:[{rotate:'-30deg'}] ,position: 'absolute', top:50, left: 40 , zindex: 150}}>
+              <FontAwesome name='thumbs-up' size={70} color='#00FF7F'/>
+            </Animated.View>
+
+            <Animated.View style={{ opacity:dislikeOpacity, transform:[{rotate:'30deg'}] ,position: 'absolute', top:50, right: 40 , zindex: 150}}>
+              <FontAwesome name='thumbs-down' size={70} color='red'/>
+            </Animated.View>
+            
+          </Animated.View>
+        )
+      }
+      else {
+        return(
+          <Animated.View {...panResponder.panHandlers} key={index} style={[{ transform:[{scale: nextCardScale}],   opacity:nextCardOpacity ,  height:SCREEN_HEIGHT-220,width:SCREEN_WIDTH, padding:10, position:'absolute'}]}>
+            
+            <TouchableWithoutFeedback onPress={()=> {navigation.navigate('User', {userId: item.authorId})}} style={{position:'absolute', zIndex:100}}>
+              <Text style={{top: SCREEN_HEIGHT-290, left: 15, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>@ExampleUser</Text>
+            </TouchableWithoutFeedback>
+
+            <Text style={{top: SCREEN_HEIGHT-255, left: 22, color:'white', position:'absolute', zIndex:100, borderColor:'black'}}>
+              12 Days Ago
+            </Text>
+            <Image style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:10}} source={item.uri}/> 
+              {/* //source={{uri: item.url}} */}
+            </Animated.View>
+        )
+        
+      }
+      
+    
+    }).reverse()
+    
   }
 
 
@@ -275,48 +324,9 @@ const Explore = ({ navigation }) => {
         </View>
 
 
-  </View>
-
-//-----------------------------------------------------------------------------//
-        // <FlatList
-        //   showsVerticalScrollIndicator={false}
-        //   refreshing={refresh}
-        //   onRefresh={loadMore}
-        //   data={imageArray}
-        //   keyExtractor={(item, index) => index.toString()}
-        //   style={{ flex: 1, backgroundColor: "#eee" }}
-        //   renderItem={({ item }) => (
-        //     <View style={{flex:1}}>
+    </View>
 
 
-
-        //       <View style={{flex:1}}>
-
-        //           <Animated.View style={{height:SCREEN_HEIGHT-220,width:SCREEN_WIDTH, padding:10, position:'absolute'}}>
-        //           <TouchableOpacity onPress={()=> {navigation.navigate('User', {userId: item.authorId})}} style={{position:'absolute', zIndex:1000}}>
-        //             <Text style={{top: SCREEN_HEIGHT-290, left: 15, color:'white', position:'absolute', zIndex:1000, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.author}</Text>
-        //           </TouchableOpacity>
-
-        //             <Text style={{top: SCREEN_HEIGHT-255, left: 24, color:'white', position:'absolute', zIndex:1000, borderColor:'black'}}>
-        //               {item.posted}
-        //             </Text>
-        //               <Image style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:10}} source={{uri: item.url}}/>
-        //           </Animated.View>
-
-        //       </View>
-
-        // </View>
-//----------------------------------------------------------------------//
-
-
-
-
-
-
-
-
-
-            // <View style={styles.flatlistMainView}>
           // ------------ COMMENTS SECTION - - WILL NEED TO BE REWORKED ------------------------//
             //   <View style={styles.flatlistUserInfoTop}>
             //     <Text>{item.posted}</Text>
@@ -345,11 +355,6 @@ const Explore = ({ navigation }) => {
 
             // </View>
 
-
-
-
-        //   )} // part of flatlist
-        // /> // part of flatlist
       )}
     </View>
   );
