@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity,Animated,Dimensions, TouchableWithoutFeedback, PanResponder } from "react-native";
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity,Animated,Dimensions, TouchableWithoutFeedback, PanResponder, ActivityIndicator } from "react-native";
 import * as Font from 'expo-font';
 
 import { f, auth, database, storage } from "../config/config";
 import { AppLoading } from "expo";
 
-import useStateWithCallback from 'use-state-with-callback'
+import { Container, Header, Left, Body, Right, Button, Icon, Title } from 'native-base'
 
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, Ionicons, Entypo } from '@expo/vector-icons'
+
+
 
 const SCREEN_WIDTH = Dimensions.get('screen').width
 const SCREEN_HEIGHT = Dimensions.get('screen').height
+
 
 fetchFonts = () => {
   return Font.loadAsync({'Billabong' : require('../assets/Billabong.ttf')})
@@ -63,15 +66,16 @@ const Explore = ({ navigation }) => {
     outputRange:[1,0.8,1],
     extrapolate:'clamp'
   })
-  
-  
-  
-  
-  
-  useEffect(()=> {
+
 
   
-  panResponder = PanResponder.create({
+  
+  
+  
+ 
+
+  
+  const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
 
     onPanResponderMove: Animated.event([null, {
@@ -85,16 +89,15 @@ const Explore = ({ navigation }) => {
         Animated.spring(pan,
           {
             toValue:{x:SCREEN_WIDTH+100,y:gesture.dy}
-          }).start(()=> {setCurrentIndex(currentIndex)})
+          }).start(()=> {setCurrentIndex(currentIndex+1)})
           
           
       } else if( gesture.dx < -120){
         Animated.spring(pan,
           {
             toValue:{x:-SCREEN_WIDTH-100,y:gesture.dy}
-          }).start(()=> {setCurrentIndex(currentIndex)})
-            
-  
+          }).start(()=> {setCurrentIndex(currentIndex+1)})
+    
       } else {
         Animated.spring(
           pan,
@@ -104,8 +107,7 @@ const Explore = ({ navigation }) => {
 
     }
   });
-  },[])
-
+ 
 
 
 
@@ -288,7 +290,7 @@ const Explore = ({ navigation }) => {
 
 
   
-
+  //EXTERNAL FONT LOADING METHOD
   if(!fontloaded){
     return(
       <AppLoading 
@@ -297,20 +299,50 @@ const Explore = ({ navigation }) => {
       />
     )
   }
-
+  //HEADER BAR CONTAINER
   return (
-    <View style={styles.mainView}>
+      <Container>
+        <Header style={{borderBottomWidth:0, height:55,backgroundColor:'#eee'}}>
+          <Left>
 
-      <View style={styles.header}>
-        <Text style={{fontSize:30, fontFamily:'Billabong'}}>Gallery</Text>
-        <Image />
-      </View>
+          </Left>
+          <Body>
+            <Title style={{bottom:5,fontSize:30, fontFamily:'Billabong', shadowRadius:1,
+        shadowColor:'black',
+        shadowOpacity:0.3,
+        shadowOffset:{height:3,width:3},
+        borderColor:'red'}}>Gallery</Title>
+          </Body>
+          <Right>
+            <TouchableOpacity onPress={()=> {navigation.navigate('Messages')}}>
+              <Entypo name='chat' size={25} color='red' style={{paddingRight:5,shadowRadius:1,
+        shadowColor:'#F02A4B',
+        shadowOpacity:0.3,
+        shadowOffset:{height:3,width:3},
+        borderColor:'red'}}/>
+            </TouchableOpacity> 
+          </Right>
+        </Header>
+
+      
+    {/* // <View style={styles.mainView}>
+
+    //   <View style={styles.header}>
+    //     <View style={{flex:1,justifyContent: 'center'}}>
+    //       <Text style={{fontSize:30, fontFamily:'Billabong', alignSelf:'center',left:20}}>
+    //         Gallery
+    //       </Text>
+    //     </View>
+    //     <View style={{justifyContent: 'center',paddingRight:10}}>
+    //       <Image source={require('../assets/pic1.jpeg')} style={{height:30,width:30,borderRadius:15,alignSelf:'flex-end'}}/>
+    //     </View>
+    //   </View> */}
 
       {loading == true ? (
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{ flex: 1, justifyContent: "center", alignItems: "center",backgroundColor:'#eee' }}
         >
-          <Text>Loading...</Text>
+          <ActivityIndicator size='large'/>
         </View>
       ) : (
         <View style={{flex:1, backgroundColor:'#eee'}}>
@@ -356,7 +388,9 @@ const Explore = ({ navigation }) => {
             // </View>
 
       )}
-    </View>
+    {/* </View> */}
+
+    </Container>
   );
 };
 export default Explore;
@@ -367,12 +401,14 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 90,
-    borderBottomWidth: 0.5,
-    justifyContent: "center",
-    alignItems: "center",
+    // borderBottomWidth: 0.5,
+    // justifyContent: "center",
+    // alignItems: 'center',
     paddingTop: 30,
     backgroundColor: "white",
-    borderColor: "lightgrey"
+    borderColor: "lightgrey",
+    flexDirection:'row',
+  
   },
   flatlistMainViewBottomBorder: {
     borderColor: "lightgrey",

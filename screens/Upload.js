@@ -40,6 +40,9 @@ uniqueId = () => {
 
 const Upload = ({ navigation }) => {
 
+    navigationOptions = ({ }) => ({
+        tabBarVisible:false
+    })
 
     const [loggedIn, setLoggedIn] = useState(false)
     const [ imageId, setImageId ] = useState(uniqueId)

@@ -24,6 +24,8 @@ import Profile from './screens/Profile'
 import Explore from './screens/Explore'
 import UserProfile from './screens/UserProfile'
 import Comments from './screens/Comments'
+import Messages from './screens/Messages'
+import SquadMembers from './screens/SquadMembers'
 
 import AddButton from './components/AddButton'
 
@@ -35,19 +37,23 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 const BottomTabNav = createBottomTabNavigator({
-  'Gallery':Explore,
+  'Gallery': Explore,
   'Upload': Upload,
-  'Profile': Profile
+  'Profile': Profile,
+  'Messages': Messages,
+  'SquadMembers': SquadMembers
 },
 {
   tabBarComponent: ({navigation}) => {
     let tintColor = "black";
+    let inactiveTintColor = 'red'
     return (
     <View style={{ height: 70, width: "100%", display: "flex", flexDirection: "row", backgroundColor:'#eee' }}>
+
         <View style={{ flex: 1 }}>
          <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}} style={{}}>
            <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10}}>
-              <MaterialIcons name='view-headline' size={32} color={tintColor}/>
+              <MaterialIcons name='view-headline' size={32}  color={tintColor}/>
             </View>
           </TouchableOpacity>
         </View>
@@ -63,6 +69,7 @@ const BottomTabNav = createBottomTabNavigator({
             </View>
         </TouchableOpacity>
       </View>
+
     </View>
     )
   }
@@ -70,7 +77,7 @@ const BottomTabNav = createBottomTabNavigator({
 )
 
 
-
+//DEPRECIATED ------------------------------------------------------------------
 const TabStack = createBottomTabNavigator(
   {
     Gallery:
@@ -106,8 +113,8 @@ const TabStack = createBottomTabNavigator(
   }, 
   {
     tabBarOptions: {
-      activeTintColor:'red',
-      inactiveTintColor:'black',
+      // activeTintColor:'red',
+      // inactiveTintColor:'black',
       style: {
         backgroundColor:  '#eee',
         borderTopWidth:0,
@@ -120,7 +127,7 @@ const TabStack = createBottomTabNavigator(
     }
   }
 )
-
+//----------------------------------------------------------------------------
 
 
 const MainStack = createStackNavigator(
@@ -151,7 +158,7 @@ const MainStack = createStackNavigator(
 
 
 
-const TabContainer =  createAppContainer(BottomTabNav)
+// const TabContainer =  createAppContainer(BottomTabNav)
 const StackContainer = createAppContainer(MainStack)
 
 

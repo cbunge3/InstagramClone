@@ -12,14 +12,16 @@ import * as Haptics from 'expo-haptics';
 
 import * as Animatable from 'react-native-animatable'
 
-import { AntDesign, Entypo }from '@expo/vector-icons'
+import { AntDesign, Entypo, Ionicons }from '@expo/vector-icons'
 
 
 
 const AddButton = ({ navigation }) => {
 
+
     buttonSize = new Animated.Value(1)
     mode = new Animated.Value(0)
+    
 
 
 
@@ -68,7 +70,7 @@ const AddButton = ({ navigation }) => {
 
 
 
-    //console.log(navigation);
+   //WHEN NAVIGATING BETWEEN SCREENS WITH ADDBUTTON COMPONENT OPEN, IT RE RENDERS WITH BUTTON OPEN CAUSING A LAG IN THE VISUALZATION OF THE BUTTON
     return(
         
         <View style={{position:'absolute',alignItems:'center'}}>
@@ -76,20 +78,20 @@ const AddButton = ({ navigation }) => {
             <Animated.View style={{position:'absolute', top: mapX}}>
             <TouchableHighlight underlayColor='red' onPress={()=>Haptics.impactAsync('light')}>
                 <View style={styles.secondaryButton}>
-                    <Entypo name='location-pin' size={22} color='white'/>
+                    <Entypo name='location-pin' size={27} color='red'/>
                 </View>
             </TouchableHighlight>
             </Animated.View>
 
             <Animated.View style={{position:'absolute', top: cameraX}}>
-            <TouchableWithoutFeedback underlayColor='red' onPressIn={()=>Haptics.impactAsync('light')} onPress={()=> {navigation.navigate('Upload')}}>
+            <TouchableWithoutFeedback underlayColor='red' onPressIn={()=>Haptics.impactAsync('light')} onPress={()=> {navigation.navigate('SquadMembers'); handlePress()}} >
                     <View style={styles.secondaryButton}>
-                        <AntDesign name='camerao' size={22} color='white'/>
+                        <Ionicons name='ios-people' size={30} color='red'/>
                     </View>
             </TouchableWithoutFeedback>
             </Animated.View>
 
-            <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite" iterationDelay={500}>
+            <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite" iterationDelay={3000}>
                 <TouchableHighlight onPress={()=>Haptics.impactAsync('medium')} onPressIn={handlePress} underlayColor='transparent'>
                     <Animated.View style={[ styles.button, sizeStyle ]}> 
                         <Animated.View style={{transform: [{ rotate: rotation }]}}>
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
         bottom:-83,
         left:-30,
         position:'absolute',
-        backgroundColor:'red',
+        backgroundColor:'white',
         alignItems:'center',
         justifyContent:'center',
         height:60,
@@ -131,7 +133,8 @@ const styles = StyleSheet.create({
         shadowRadius:10,
         shadowColor:'#F02A4B',
         shadowOpacity:0.3,
-        shadowOffset:{height:10}
+        shadowOffset:{height:10},
+        borderColor:'red'
 
     }
 });
