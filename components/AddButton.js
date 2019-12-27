@@ -5,7 +5,8 @@ import {
     StyleSheet,
     Animated,
     TouchableHighlight,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Dimensions
 } from "react-native";
 
 import * as Haptics from 'expo-haptics';
@@ -14,7 +15,8 @@ import * as Animatable from 'react-native-animatable'
 
 import { AntDesign, Entypo, Ionicons }from '@expo/vector-icons'
 
-
+const SCREEN_WIDTH = Dimensions.get('screen').width
+const SCREEN_HEIGHT = Dimensions.get('screen').height
 
 const AddButton = ({ navigation }) => {
 
@@ -58,14 +60,19 @@ const AddButton = ({ navigation }) => {
         outputRange: ['0deg','45deg']
     })
 
-    const cameraX = mode.interpolate({
+    const squadX = mode.interpolate({
         inputRange: [0,1],
-        outputRange:[-24,-100]
+        outputRange:[-24,-92]
     })
 
     const mapX = mode.interpolate({
         inputRange: [0,1],
-        outputRange:[-24,-170]
+        outputRange:[-24,-160]
+    })
+
+    const messagesX = mode.interpolate({
+        inputRange: [0,1],
+        outputRange:[-24,-228]
     })
 
 
@@ -75,30 +82,38 @@ const AddButton = ({ navigation }) => {
         
         <View style={{position:'absolute',alignItems:'center'}}>
 
-            <Animated.View style={{position:'absolute', top: mapX}}>
-            <TouchableHighlight underlayColor='red' onPress={()=>Haptics.impactAsync('light')}>
+            <Animated.View style={{position:'absolute', left: messagesX}}>
+            <TouchableHighlight underlayColor='red' onPressIn={()=>Haptics.impactAsync('light')} onPress={()=> {navigation.navigate('Messages')}}>
                 <View style={styles.secondaryButton}>
-                    <Entypo name='location-pin' size={27} color='red'/>
+                    <Entypo name='chat' size={27} color='rgb(97,213,185)'/>
                 </View>
             </TouchableHighlight>
             </Animated.View>
 
-            <Animated.View style={{position:'absolute', top: cameraX}}>
+            <Animated.View style={{position:'absolute', left: mapX}}>
+            <TouchableHighlight underlayColor='red' onPress={()=>Haptics.impactAsync('light')}>
+                <View style={styles.secondaryButton}>
+                    <Entypo name='location-pin' size={27} color='#fdcb6e'/>
+                </View>
+            </TouchableHighlight>
+            </Animated.View>
+
+            <Animated.View style={{position:'absolute', left: squadX}}>
             <TouchableWithoutFeedback underlayColor='red' onPressIn={()=>Haptics.impactAsync('light')} onPress={()=> {navigation.navigate('SquadMembers'); handlePress()}} >
                     <View style={styles.secondaryButton}>
-                        <Ionicons name='ios-people' size={30} color='red'/>
+                        <Ionicons name='ios-people' size={30} color='#a29bfe'/>
                     </View>
             </TouchableWithoutFeedback>
             </Animated.View>
 
             <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite" iterationDelay={3000}>
-                <TouchableHighlight onPress={()=>Haptics.impactAsync('medium')} onPressIn={handlePress} underlayColor='transparent'>
+                <TouchableWithoutFeedback onPress={()=>Haptics.impactAsync('medium')} onPressIn={handlePress} underlayColor='transparent'>
                     <Animated.View style={[ styles.button, sizeStyle ]}> 
                         <Animated.View style={{transform: [{ rotate: rotation }]}}>
                             <AntDesign name='plus' size={24} color='white'/>
                         </Animated.View>
                     </Animated.View>
-                </TouchableHighlight>
+                </TouchableWithoutFeedback>
             </Animatable.View>
 
         </View>
@@ -111,18 +126,19 @@ const styles = StyleSheet.create({
         marginBottom:40, 
         justifyContent: 'center',
         alignItems:'center',
-        backgroundColor:'red', 
+        backgroundColor:'rgb(97,213,185)', 
         height:60,
         width:60,
         borderRadius:30,
-        shadowRadius:10,
-        shadowColor:'#F02A4B',
-        shadowOpacity:0.3,
-        shadowOffset:{height:10},
+        // shadowRadius:10,
+        // shadowColor:'rgb(97,213,200)',
+        // shadowOpacity:0.3,
+        // shadowOffset:{height:10},
+        //#F02A4B'
     },
     secondaryButton:{
-        bottom:-83,
-        left:-30,
+        bottom:-60,
+        right: -83.9,
         position:'absolute',
         backgroundColor:'white',
         alignItems:'center',
@@ -130,11 +146,10 @@ const styles = StyleSheet.create({
         height:60,
         width:60,
         borderRadius:30,
-        shadowRadius:10,
-        shadowColor:'#F02A4B',
-        shadowOpacity:0.3,
-        shadowOffset:{height:10},
-        borderColor:'red'
+        // shadowRadius:10,
+        // shadowColor:'rgb(97,213,186)',
+        // shadowOpacity:0.3,
+        // shadowOffset:{height:10},
 
     }
 });

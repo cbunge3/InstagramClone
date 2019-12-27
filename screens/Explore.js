@@ -74,8 +74,7 @@ const Explore = ({ navigation }) => {
   
  
 
-  
-  const panResponder = PanResponder.create({
+   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
 
     onPanResponderMove: Animated.event([null, {
@@ -106,7 +105,9 @@ const Explore = ({ navigation }) => {
       }
 
     }
-  });
+  })
+  
+
  
 
 
@@ -211,10 +212,6 @@ const Explore = ({ navigation }) => {
       .catch(error => console.log(error));
   };
 
-  loadMore = () => {
-    loadFeed();
-  };
-
   // --------- TEST DATA --------- //
   const imageData = [
     {id:0, uri: require('../assets/pic1.jpeg'), name: 'Marissa'},
@@ -229,32 +226,35 @@ const Explore = ({ navigation }) => {
 
 // ------------ END OF TEST DATA ------------- //
  
+
+
   renderUsers = () => {
     return imageData.map((item,index) => {
-      if( index < currentIndex  )
+      if( currentIndex < 0  )
       {
         return null
       }
-      else if (index == currentIndex) {
+      if (index == currentIndex) {
         return(
-          <Animated.View {...panResponder.panHandlers}  key={index} style={[ rotateTranslate, {height:SCREEN_HEIGHT-220,width:SCREEN_WIDTH, padding:10, position:'absolute'}]}>
+          <Animated.View {...panResponder.panHandlers}  key={index} style={[ rotateTranslate, {height:SCREEN_HEIGHT-220,width:SCREEN_WIDTH, padding:10, position:'absolute',}]}>
 
             <TouchableWithoutFeedback onPress={()=> {navigation.navigate('Profile')}} style={{position:'absolute', zIndex:100}}>
-              <Text style={{top: SCREEN_HEIGHT-290, left: 15, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.name}</Text>
+              <Text style={{top: SCREEN_HEIGHT-270, left: 15, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.name}</Text>
             </TouchableWithoutFeedback>
 
-            <Text style={{top: SCREEN_HEIGHT-255, left: 22, color:'white', position:'absolute', zIndex:100, borderColor:'black'}}>
-              12 Days Ago
+            <Text style={{top: SCREEN_HEIGHT-270, right: 22, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700'}}>
+              {Math.floor(Math.random()*60)+18}
             </Text>
-              <Image style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:10}} source={item.uri}/> 
-              {/* //source={{uri: item.url}} */}
+            
+            <Image  style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:10}} source={item.uri}/> 
+            {/* //source={{uri: item.url}} */}
             <Animated.View style={{opacity:likeOpacity, transform:[{rotate:'-30deg'}] ,position: 'absolute', top:50, left: 40 , zindex: 150}}>
               <FontAwesome name='thumbs-up' size={70} color='#00FF7F'/>
             </Animated.View>
-
+            
             <Animated.View style={{ opacity:dislikeOpacity, transform:[{rotate:'30deg'}] ,position: 'absolute', top:50, right: 40 , zindex: 150}}>
               <FontAwesome name='thumbs-down' size={70} color='red'/>
-            </Animated.View>
+            </Animated.View>            
             
           </Animated.View>
         )
@@ -264,7 +264,7 @@ const Explore = ({ navigation }) => {
           <Animated.View {...panResponder.panHandlers} key={index} style={[{ transform:[{scale: nextCardScale}],   opacity:nextCardOpacity ,  height:SCREEN_HEIGHT-220,width:SCREEN_WIDTH, padding:10, position:'absolute'}]}>
             
             <TouchableWithoutFeedback onPress={()=> {navigation.navigate('User', {userId: item.authorId})}} style={{position:'absolute', zIndex:100}}>
-              <Text style={{top: SCREEN_HEIGHT-290, left: 15, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>@ExampleUser</Text>
+              <Text style={{top: SCREEN_HEIGHT-290, left: 15, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.name}</Text>
             </TouchableWithoutFeedback>
 
             <Text style={{top: SCREEN_HEIGHT-255, left: 22, color:'white', position:'absolute', zIndex:100, borderColor:'black'}}>
@@ -307,20 +307,10 @@ const Explore = ({ navigation }) => {
 
           </Left>
           <Body>
-            <Title style={{bottom:5,fontSize:30, fontFamily:'Billabong', shadowRadius:1,
-        shadowColor:'black',
-        shadowOpacity:0.3,
-        shadowOffset:{height:3,width:3},
-        borderColor:'red'}}>Gallery</Title>
+            <Title style={{color:'rgb(97,213,185)' ,bottom:5,fontSize:30, fontFamily:'Billabong',shadowOffset:{height:1,width:1}, shadowRadius:1,shadowColor:'black'}}>Gallery</Title>
           </Body>
           <Right>
-            <TouchableOpacity onPress={()=> {navigation.navigate('Messages')}}>
-              <Entypo name='chat' size={25} color='red' style={{paddingRight:5,shadowRadius:1,
-        shadowColor:'#F02A4B',
-        shadowOpacity:0.3,
-        shadowOffset:{height:3,width:3},
-        borderColor:'red'}}/>
-            </TouchableOpacity> 
+
           </Right>
         </Header>
 

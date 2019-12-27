@@ -32,7 +32,7 @@ import AddButton from './components/AddButton'
 
 
 
-import {Feather, AntDesign, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import {Feather, AntDesign, MaterialCommunityIcons, MaterialIcons, Ionicons, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
@@ -46,31 +46,34 @@ const BottomTabNav = createBottomTabNavigator({
 {
   tabBarComponent: ({navigation}) => {
     let tintColor = "black";
-    let inactiveTintColor = 'red'
+
     return (
-    <View style={{ height: 70, width: "100%", display: "flex", flexDirection: "row", backgroundColor:'#eee' }}>
-
-        <View style={{ flex: 1 }}>
-         <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}} style={{}}>
-           <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10}}>
-              <MaterialIcons name='view-headline' size={32}  color={tintColor}/>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{flex:1, display:'flex', alignItems:'center', top:-30}}>
-          <AddButton navigation={ navigation }/>
-        </View>
-
-       <View style={{ flex: 1 }}>
-         <TouchableOpacity onPress={()=> { navigation.navigate('Profile')}} style={{}}>
-           <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10 }}>
-              <Feather  name='user' size={32} color={tintColor}/>
-            </View>
-        </TouchableOpacity>
+      <View style={{justifyContent: 'flex-end',alignItems:'flex-end',right:10,bottom:-10}}>
+        <AddButton navigation={ navigation }/>
       </View>
+    // <View style={{ height: 70, width: "100%", display: "flex", flexDirection: "row", backgroundColor:'#eee'}}>
 
-    </View>
+    //     <View style={{ flex: 1 }}>
+    //      <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}}>
+    //        <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:7}}>
+    //           <Ionicons name='md-search' size={35}  color={tintColor}/>
+    //         </View>
+    //       </TouchableOpacity>
+    //     </View>
+
+        // <View style={{flex:1, display:'flex', alignItems:'center', top:-30}}>
+        //   <AddButton navigation={ navigation }/>
+        // </View>
+
+    //    <View style={{ flex: 1 }}>
+    //      <TouchableOpacity onPress={()=> { navigation.navigate('Profile')}}>
+    //        <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10 }}>
+    //           <Feather  name='user' size={32} color={tintColor}/>
+    //         </View>
+    //     </TouchableOpacity>
+    //   </View>
+
+    // </View>
     )
   }
 }
@@ -163,8 +166,6 @@ const StackContainer = createAppContainer(MainStack)
 
 
 export default App = () => {
-
-
 
 
   login = async () => {
