@@ -27,7 +27,11 @@ const AddButton = ({ navigation }) => {
 
 
 
-
+    closeButton = () => {
+        Animated.timing(mode,{
+            toValue: mode._value === 1 ? 0 : 1
+        }).start()
+    }
 
 
 
@@ -57,7 +61,7 @@ const AddButton = ({ navigation }) => {
 
     const rotation = mode.interpolate({
         inputRange: [0,1],
-        outputRange: ['0deg','45deg']
+        outputRange: ['0deg','-90deg']
     })
 
     const squadX = mode.interpolate({
@@ -75,6 +79,11 @@ const AddButton = ({ navigation }) => {
         outputRange:[-24,-228]
     })
 
+    const profileX = mode.interpolate({
+        inputRange: [0,1],
+        outputRange:[-24,-295]
+    })
+
 
 
    //WHEN NAVIGATING BETWEEN SCREENS WITH ADDBUTTON COMPONENT OPEN, IT RE RENDERS WITH BUTTON OPEN CAUSING A LAG IN THE VISUALZATION OF THE BUTTON
@@ -82,35 +91,43 @@ const AddButton = ({ navigation }) => {
         
         <View style={{position:'absolute',alignItems:'center'}}>
 
+            <Animated.View style={{position:'absolute', left: profileX}}>
+                <TouchableWithoutFeedback underlayColor='red' onPressIn={()=>Haptics.impactAsync('light')} onPress={()=> {navigation.navigate('Profile')}}>
+                    <View style={styles.secondaryButton}>
+                        <Entypo name='user' size={27} color='#fd79a8'/>
+                    </View>
+                </TouchableWithoutFeedback>
+            </Animated.View>
+
             <Animated.View style={{position:'absolute', left: messagesX}}>
-            <TouchableHighlight underlayColor='red' onPressIn={()=>Haptics.impactAsync('light')} onPress={()=> {navigation.navigate('Messages')}}>
-                <View style={styles.secondaryButton}>
-                    <Entypo name='chat' size={27} color='rgb(97,213,185)'/>
-                </View>
-            </TouchableHighlight>
+                <TouchableWithoutFeedback underlayColor='red' onPressIn={()=>Haptics.impactAsync('light')} onPress={()=> {navigation.navigate('Messages')}}>
+                    <View style={styles.secondaryButton}>
+                        <Entypo name='chat' size={27} color='rgb(97,213,185)'/>
+                    </View>
+                </TouchableWithoutFeedback>
             </Animated.View>
 
             <Animated.View style={{position:'absolute', left: mapX}}>
-            <TouchableHighlight underlayColor='red' onPress={()=>Haptics.impactAsync('light')}>
-                <View style={styles.secondaryButton}>
-                    <Entypo name='location-pin' size={27} color='#fdcb6e'/>
-                </View>
-            </TouchableHighlight>
+                <TouchableWithoutFeedback underlayColor='red' onPress={()=>Haptics.impactAsync('light')}>
+                    <View style={styles.secondaryButton}>
+                        <Entypo name='location-pin' size={27} color='#fdcb6e'/>
+                    </View>
+                </TouchableWithoutFeedback>
             </Animated.View>
 
             <Animated.View style={{position:'absolute', left: squadX}}>
-            <TouchableWithoutFeedback underlayColor='red' onPressIn={()=>Haptics.impactAsync('light')} onPress={()=> {navigation.navigate('SquadMembers'); handlePress()}} >
-                    <View style={styles.secondaryButton}>
-                        <Ionicons name='ios-people' size={30} color='#a29bfe'/>
-                    </View>
-            </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback underlayColor='red' onPressIn={()=>Haptics.impactAsync('light')} onPress={()=> {navigation.navigate('SquadMembers'); closeButton()}} >
+                        <View style={styles.secondaryButton}>
+                            <Ionicons name='ios-people' size={30} color='#a29bfe'/>
+                        </View>
+                </TouchableWithoutFeedback>
             </Animated.View>
 
             <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite" iterationDelay={3000}>
                 <TouchableWithoutFeedback onPress={()=>Haptics.impactAsync('medium')} onPressIn={handlePress} underlayColor='transparent'>
                     <Animated.View style={[ styles.button, sizeStyle ]}> 
                         <Animated.View style={{transform: [{ rotate: rotation }]}}>
-                            <AntDesign name='plus' size={24} color='white'/>
+                            <Entypo name='chevron-up' size={24} color='white'/>
                         </Animated.View>
                     </Animated.View>
                 </TouchableWithoutFeedback>
@@ -130,6 +147,7 @@ const styles = StyleSheet.create({
         height:60,
         width:60,
         borderRadius:30,
+
         // shadowRadius:10,
         // shadowColor:'rgb(97,213,200)',
         // shadowOpacity:0.3,
@@ -146,6 +164,7 @@ const styles = StyleSheet.create({
         height:60,
         width:60,
         borderRadius:30,
+
         // shadowRadius:10,
         // shadowColor:'rgb(97,213,186)',
         // shadowOpacity:0.3,
