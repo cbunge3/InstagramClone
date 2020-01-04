@@ -33,14 +33,6 @@ const Profile = ({ navigation }) => {
     checkParams = () => {
         let params = navigation.getParam('userId')
         fetchUserInfo(params)
-            // if(params){
-            //     if(params.userId){
-            //         setUserId({
-            //             userId: params.userId
-            //         })
-            //         fetchUserInfo()
-            //     }
-            // }
     }
 
     fetchUserInfo = (userId) => {

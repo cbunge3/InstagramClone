@@ -10,7 +10,8 @@ import {
     FlatList,
     Animated,
     TouchableWithoutFeedback,
-    TouchableHighlight
+    TouchableHighlight,
+    Dimensions
 } from "react-native";
 
 import * as Haptics from 'expo-haptics';
@@ -45,13 +46,13 @@ const BottomTabNav = createBottomTabNavigator({
 },
 {
   tabBarComponent: ({navigation}) => {
-    let tintColor = "black";
+    let tintColor = "rgb(97,213,185)";
 
     return (
-      <View style={{justifyContent: 'flex-end',alignItems:'flex-end',right:10,bottom:-10}}>
+      <View style={{justifyContent: 'center',alignItems:'center',bottom:30}}>
         <AddButton navigation={ navigation }/>
       </View>
-    // <View style={{ height: 70, width: "100%", display: "flex", flexDirection: "row", backgroundColor:'#eee'}}>
+    // <View style={{ height: 60, width: '100%', display: "flex", flexDirection: "row", backgroundColor:'#eee'}}>
 
     //     <View style={{ flex: 1 }}>
     //      <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}}>
@@ -61,9 +62,10 @@ const BottomTabNav = createBottomTabNavigator({
     //       </TouchableOpacity>
     //     </View>
 
-        // <View style={{flex:1, display:'flex', alignItems:'center', top:-30}}>
-        //   <AddButton navigation={ navigation }/>
-        // </View>
+    //     <View style={{flex:1, display:'flex', alignItems:'center'}}>
+    //       {/* <AddButton navigation={ navigation }/> */}
+         
+    //     </View>
 
     //    <View style={{ flex: 1 }}>
     //      <TouchableOpacity onPress={()=> { navigation.navigate('Profile')}}>

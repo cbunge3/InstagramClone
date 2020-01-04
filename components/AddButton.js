@@ -61,7 +61,7 @@ const AddButton = ({ navigation }) => {
 
     const rotation = mode.interpolate({
         inputRange: [0,1],
-        outputRange: ['0deg','-90deg']
+        outputRange: ['0deg','180deg']
     })
 
     const squadX = mode.interpolate({
@@ -76,12 +76,12 @@ const AddButton = ({ navigation }) => {
 
     const messagesX = mode.interpolate({
         inputRange: [0,1],
-        outputRange:[-24,-228]
+        outputRange:[-24,44]
     })
 
     const profileX = mode.interpolate({
         inputRange: [0,1],
-        outputRange:[-24,-295]
+        outputRange:[-24,112]
     })
 
 
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
         bottom:-60,
         right: -83.9,
         position:'absolute',
-        backgroundColor:'white',
+        backgroundColor:'#eee',
         alignItems:'center',
         justifyContent:'center',
         height:60,
