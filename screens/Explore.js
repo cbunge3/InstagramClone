@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity,Animated,Dimensions, TouchableWithoutFeedback, PanResponder, ActivityIndicator,ScrollView,SafeAreaView } from "react-native";
 import * as Font from 'expo-font';
+import Swiper from 'react-native-deck-swiper'
 
 
 import { f, auth, database, storage } from "../config/config";
@@ -47,7 +48,7 @@ const Explore = ({ navigation }) => {
 
 
   getPhotosFromUrl = async () => {
-    const res = await fetch('https://randomuser.me/api/?results=10')
+    const res = await fetch('https://randomuser.me/api/?results=100')
     res
         .json()
         .then(res => setUsers(res.results))
@@ -185,7 +186,7 @@ const Explore = ({ navigation }) => {
 
 
 
-
+//FIREBASE DATA PULL - SAW SOME EASIER WAYS TO GO ABOUT THIS, WILL PROBALY CHANGE IN THE FUTURE
   loadFeed = () => {
     setRefresh(true);
     // setImageArray(imageArray) need to find out why this runs without calling a setState on the array of data
@@ -310,75 +311,53 @@ const Explore = ({ navigation }) => {
     {id:7, uri: require('../assets/restaraunts/dinner3.jpg')}
 ]
   let colorz = ['#6c5ce7','#e84393','#81ecec','#0984e3','#d63031','#fd79a8','#00b894','#dfe6e9']
-  const randomColors =colorz[ Math.floor(Math.random()*colorz.length)]
+  const randomColors =colorz[ Math.floor(Math.random()*users.length)]
+  
   //'rgb(97,213,185)'
 
   renderRestaraunts = () => {
-    return imageData.map((item,index) => {
+    return users.map((item,index) => {
+      let colorCode = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')'
+     
       return( //TODO: FIX PADDING ON THE LIST CLIPS CARD ON THE RIGHT, TOO CLOSE TO THE EDGE OF SCREEN
         <TouchableOpacity  key={index} onPress={()=>Haptics.impactAsync('light')} style={{top:4}}>
-          <View  style={{height:102,width:70,right:-7,shadowRadius:3,shadowColor:colorz[index],shadowOpacity:1,shadowOffset:{height:0,width:0},}}>
+          <View  style={{height:102,width:70,right:-7,shadowRadius:3,shadowColor:colorCode,shadowOpacity:1,shadowOffset:{height:0,width:0},}}>
               <View style={{flex:1,marginRight:10,}}>
-                <Image source={item.uri} style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:15,}}/>
+                <Image source={{uri:item.picture.large}}style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:15,}}/>
               </View>
           </View>
         </TouchableOpacity>
       )
-    })
+    }).reverse()
   }
 
-
-
-
-
-
-
-
-  renderImages = ({item,index})=> {
-
-      if (index ===currentIndex) {
+  RenderCard = ({users}) => {
     return(
-    <Animated.View {...panResponder.panHandlers}  key={index} style={[ rotateTranslate, {height:SCREEN_HEIGHT-290,width:SCREEN_WIDTH, paddingHorizontal :10, position:'absolute',paddingBottom: 10,}]}>
+    <View  style={{height:SCREEN_HEIGHT-310,width:'100%',shadowColor: 'black',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowRadius: 6,
+      shadowOpacity: 0.3,
+      elevation: 2,}}
+    >
 
-              <TouchableWithoutFeedback onPress={()=> {navigation.navigate('Profile')}} style={{position:'absolute', zIndex:100}}>
-                <Text style={{top: SCREEN_HEIGHT-340, left: 20, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.name.first}</Text>
-              </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback style={{position:'absolute', zIndex:100}}>
+        <Text style={{top: SCREEN_HEIGHT-340, left: 20, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{users.name.first}</Text>
+      </TouchableWithoutFeedback>
 
-              <Text style={{top: SCREEN_HEIGHT-340, right: 22, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700'}}>
-                {/* {Math.floor(Math.random()*60)+18} */}
-                {item.dob.age}
-              </Text>
-              <Image  style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:20}} source={{uri:item.picture.large}}/> 
-              {/* //source={{uri: item.url}} */}
-              <Animated.View style={{opacity:likeOpacity, transform:[{rotate:'-30deg'}] ,position: 'absolute', top:50, left: 40 , zindex: 150}}>
-                <FontAwesome name='thumbs-up' size={70} color='rgb(97,213,185)'/>
-              </Animated.View>
-              
-              <Animated.View style={{ opacity:dislikeOpacity, transform:[{rotate:'30deg'}] ,position: 'absolute', top:50, right: 40 , zindex: 150}}>
-                <FontAwesome name='thumbs-down' size={70} color='red'/>
-              </Animated.View>       
-            
-    </Animated.View>
+      <Text style={{top: SCREEN_HEIGHT-340, right: 22, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700'}}>
+        {users.dob.age}
+      </Text>
+      <Image  style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:20}} source={{uri:users.picture.large}}/> 
+
+  
+    </View>
     )
-      }
-      else {
-        return(
-          <Animated.View  key={index} style={[{ transform:[{scale: nextCardScale}], nextCardOpacity, height:SCREEN_HEIGHT-290,width:SCREEN_WIDTH, paddingHorizontal:10, position:'absolute',paddingBottom: 10,}]}>
-            
-            <TouchableWithoutFeedback onPress={()=> {navigation.navigate('Profile')}} style={{position:'absolute', zIndex:100}}>
-                <Text style={{top: SCREEN_HEIGHT-340, left: 20, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.name.first}</Text>
-              </TouchableWithoutFeedback>
-
-              <Text style={{top: SCREEN_HEIGHT-340, right: 22, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700'}}>
-                {/* {Math.floor(Math.random()*60)+18} */}
-                {item.dob.age}
-              </Text>
-              <Image  style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:20}} source={{uri:item.picture.large}}/> 
-              {/* //source={{uri: item.url}} */}
-          </Animated.View>
-        )
-      }
   }
+
+
 
   
   //EXTERNAL FONT LOADING METHOD
@@ -437,19 +416,32 @@ const Explore = ({ navigation }) => {
             </View>
 
 
-          {/* <View style={{flex:1,justifyContent: 'flex-end',bottom:80}}> */}
-          <View style={{flex:1, bottom:0}}>
-
-            {/* {renderUsers()} */}
-
-
-            <FlatList
-          
-            keyExtractor={(item,index) => index.toString()}
-            data={users}
-            renderItem={renderImages}
-            />
-
+          <View style={{flex:1,}}>
+            <View style={{top:-65}}>
+              <Swiper
+              
+              animateCardOpacity={true}
+              disableBottomSwipe
+              cards={users}
+              renderCard={(users) => <RenderCard users={users}/> }
+              cardIndex={0}
+              backgroundColor='#2d3436'
+              stackSize={4}
+              infinite
+              onTapCard={()=> alert('Hello')}
+              showSecondCard
+              stackAnimationFriction={7}
+              animateOverlayLabelsOpacity
+              overlayLabels={{
+                left:{
+                  title:'NOPE',
+                  style:{
+                    wrapper: styles.overlayWrapper,
+                  }
+                }
+              }}
+              />
+            </View>
           </View>
 
           {/* <View style={{height:215,width:SCREEN_WIDTH}}>
@@ -504,6 +496,11 @@ const styles = StyleSheet.create({
   mainView: {
     flex: 1
   },
+  container: {
+    flex: 1,
+    bottom:-59,
+   
+  },
   header: {
     height: 90,
     // borderBottomWidth: 0.5,
@@ -548,5 +545,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: "center",
     color:'lightblue'
-  }
+  },
+  overlayWrapper: {
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
+    marginTop: 30,
+    marginLeft: -30,
+  },
 });
