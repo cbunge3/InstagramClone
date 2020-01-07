@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack'
+import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createAppContainer } from 'react-navigation';
 import React, { useState, useEffect } from "react";
 import { 
@@ -37,46 +38,62 @@ import {Feather, AntDesign, MaterialCommunityIcons, MaterialIcons, Ionicons, Fon
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
-const BottomTabNav = createBottomTabNavigator({
+// const BottomTabNav = createBottomTabNavigator({
+//   'Gallery': Explore,
+//   'Upload': Upload,
+//   'Profile': Profile,
+//   'Messages': Messages,
+//   'SquadMembers': SquadMembers
+// },
+// {
+//   tabBarComponent: ({navigation}) => {
+//     let tintColor = "rgb(97,213,185)";
+
+//     return (
+//       <View style={{justifyContent: 'center',alignItems:'center',bottom:30}}>
+//         <AddButton navigation={ navigation }/>
+//       </View>
+
+      
+//     // <View style={{ height: 60, width: '100%', display: "flex", flexDirection: "row", backgroundColor:'#eee'}}>
+
+//     //     <View style={{ flex: 1 }}>
+//     //      <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}}>
+//     //        <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:7}}>
+//     //           <Ionicons name='md-search' size={35}  color={tintColor}/>
+//     //         </View>
+//     //       </TouchableOpacity>
+//     //     </View>
+
+//     //     <View style={{flex:1, display:'flex', alignItems:'center'}}>
+//     //       {/* <AddButton navigation={ navigation }/> */}
+         
+//     //     </View>
+
+//     //    <View style={{ flex: 1 }}>
+//     //      <TouchableOpacity onPress={()=> { navigation.navigate('Profile')}}>
+//     //        <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10 }}>
+//     //           <Feather  name='user' size={32} color={tintColor}/>
+//     //         </View>
+//     //     </TouchableOpacity>
+//     //   </View>
+
+//     // </View>
+//     )
+//   }
+// }
+// )
+
+const drawer = createDrawerNavigator({
   'Gallery': Explore,
   'Upload': Upload,
   'Profile': Profile,
   'Messages': Messages,
   'SquadMembers': SquadMembers
-},
-{
-  tabBarComponent: ({navigation}) => {
-    let tintColor = "rgb(97,213,185)";
-
-    return (
-      <View style={{justifyContent: 'center',alignItems:'center',bottom:30}}>
-        <AddButton navigation={ navigation }/>
-      </View>
-    // <View style={{ height: 60, width: '100%', display: "flex", flexDirection: "row", backgroundColor:'#eee'}}>
-
-    //     <View style={{ flex: 1 }}>
-    //      <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}}>
-    //        <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:7}}>
-    //           <Ionicons name='md-search' size={35}  color={tintColor}/>
-    //         </View>
-    //       </TouchableOpacity>
-    //     </View>
-
-    //     <View style={{flex:1, display:'flex', alignItems:'center'}}>
-    //       {/* <AddButton navigation={ navigation }/> */}
-         
-    //     </View>
-
-    //    <View style={{ flex: 1 }}>
-    //      <TouchableOpacity onPress={()=> { navigation.navigate('Profile')}}>
-    //        <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10 }}>
-    //           <Feather  name='user' size={32} color={tintColor}/>
-    //         </View>
-    //     </TouchableOpacity>
-    //   </View>
-
-    // </View>
-    )
+},{
+  Home:{
+    screen:Explore,
+    navigationOptions:{}
   }
 }
 )
@@ -139,7 +156,7 @@ const MainStack = createStackNavigator(
   {
     Home:
     {
-      screen: BottomTabNav,
+      screen: drawer,
       navigationOptions: {}
     },
     User:

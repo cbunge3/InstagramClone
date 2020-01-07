@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
         bottom:-60,
         right: -83.9,
         position:'absolute',
-        backgroundColor:'#eee',
+        backgroundColor:'white',
         alignItems:'center',
         justifyContent:'center',
         height:60,

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity,Animated,Dimensions, TouchableWithoutFeedback, PanResponder, ActivityIndicator,ScrollView,SafeAreaView } from "react-native";
+import { RefreshControl, View, Text, StyleSheet, Image, FlatList, TouchableOpacity,Animated,Dimensions, TouchableWithoutFeedback, PanResponder, ActivityIndicator,ScrollView,SafeAreaView } from "react-native";
 import * as Font from 'expo-font';
 import Swiper from 'react-native-deck-swiper'
 
 
 import { f, auth, database, storage } from "../config/config";
 import { AppLoading } from "expo";
+import * as Animatable from 'react-native-animatable'
 
 import { Container, Header,Title, DeckSwiper, Card, CardItem,Left, Right } from 'native-base'
 
-import { FontAwesome, Ionicons, Entypo } from '@expo/vector-icons'
+import { FontAwesome, Ionicons, Entypo, AntDesign } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics';
 
 
@@ -42,10 +43,15 @@ const Explore = ({ navigation }) => {
   const [ currentIndex, setCurrentIndex ] = useState(0)
   const [users, setUsers ] = useState([])
   const [isLoading, setIsLoading ] =useState(true)
+  const [ fetching, setFetching ] = useState(false)
 
 
 
-
+  onRefresh = () => {
+    setFetching(true)
+    getPhotosFromUrl()
+    console.log('refresh')
+  }
 
   getPhotosFromUrl = async () => {
     const res = await fetch('https://randomuser.me/api/?results=100')
@@ -55,9 +61,16 @@ const Explore = ({ navigation }) => {
         .then(res => setIsLoading(false))
   }
 
+
+
+
+
+
   useEffect(()=>{
     getPhotosFromUrl()
   },[])
+
+  
 
   const rotate = pan.x.interpolate({
     inputRange:[-SCREEN_WIDTH/2,0,SCREEN_WIDTH/2],
@@ -315,12 +328,12 @@ const Explore = ({ navigation }) => {
   
   //'rgb(97,213,185)'
 
-  renderRestaraunts = () => {
-    return users.map((item,index) => {
+
+  flatlistRestaraunts = ({item}) => {
       let colorCode = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')'
      
       return( //TODO: FIX PADDING ON THE LIST CLIPS CARD ON THE RIGHT, TOO CLOSE TO THE EDGE OF SCREEN
-        <TouchableOpacity  key={index} onPress={()=>Haptics.impactAsync('light')} style={{top:4}}>
+        <TouchableOpacity  onPress={()=>Haptics.impactAsync('light')} style={{top:4}}>
           <View  style={{height:102,width:70,right:-7,shadowRadius:3,shadowColor:colorCode,shadowOpacity:1,shadowOffset:{height:0,width:0},}}>
               <View style={{flex:1,marginRight:10,}}>
                 <Image source={{uri:item.picture.large}}style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:15,}}/>
@@ -328,10 +341,10 @@ const Explore = ({ navigation }) => {
           </View>
         </TouchableOpacity>
       )
-    }).reverse()
-  }
+    }
 
   RenderCard = ({users}) => {
+    //style={{height:SCREEN_HEIGHT-310,
     return(
     <View  style={{height:SCREEN_HEIGHT-310,width:'100%',shadowColor: 'black',
       shadowOffset: {
@@ -370,7 +383,7 @@ const Explore = ({ navigation }) => {
     )
   }
 
-
+  
 
 
   
@@ -378,9 +391,9 @@ const Explore = ({ navigation }) => {
   //HEADER BAR CONTAINER
   return (
       <Container>
-        <Header  style={{borderBottomWidth:0, height:70,backgroundColor:'#2d3436'}}>
+        <Header  style={{borderBottomWidth:0, height:70,backgroundColor:'#eee'}}>
           <Left>
-            <Title style={{color:'rgb(97,213,185)',fontSize:20, fontFamily:'Nunito'}}>For You </Title>
+            <Title style={{color:'rgb(97,213,185)',fontSize:20, fontFamily:'Nunito'}}>Around You  </Title>
           </Left>
           {/* <Body style={{borderWidth:1,borderColor:'red'}}> */}
             {/* <Title style={{color:'rgb(97,213,185)' ,bottom:10,fontSize:30, fontFamily:'Billabong'}}>For You</Title> */}
@@ -402,33 +415,56 @@ const Explore = ({ navigation }) => {
     //   </View> */}
 
       {loading == true ? (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center",backgroundColor:'2d3436' }}>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center",backgroundColor:'#eee' }}>
           <ActivityIndicator size='large'/>
         </View>
       ) : (
-        <View style={{flex:1,backgroundColor:'#2d3436'}}>
-          <View style={{height:120,width:'100%'}}>
-            <ScrollView  horizontal={true} showsHorizontalScrollIndicator={false}>
+        <View style={{flex:1,backgroundColor:'#eee'}}>
+          <View style={{height:120,width:'100%',flexDirection:'row'}}>
 
-              {renderRestaraunts()}
+            <FlatList
+            showsHorizontalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+              refreshing={fetching}
+              onRefresh={()=> onRefresh()}
+              />}
+              horizontal={true}
+              data={users}
+              keyExtractor={(item,index)=> index.toString()}
+              renderItem={flatlistRestaraunts}
+              ListHeaderComponent={
+                <View  style={{height:107,width:70,right:-7,shadowRadius:3,shadowColor:'red',shadowOpacity:1,shadowOffset:{height:0,width:0},}}>
+                  <View style={{flex:1,marginRight:10,marginTop:4}}>
+                    <Image source={require('../assets/pic1.jpeg')}style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:15,}}/>
+                    <TouchableWithoutFeedback style={{position:'absolute',zIndex:100}} onPress={()=> navigation.navigate('Upload')} onPressIn={()=>Haptics.impactAsync('light')} >
+                      <AntDesign style={{zIndex:100,position:'absolute',top:60,right: 16}} name='pluscircleo' size={30} color='white'/>
+                    </TouchableWithoutFeedback>
+                  </View>
+              </View>
+             
+              }
+              />
 
-            </ScrollView> 
-            </View>
+          </View>
 
 
           <View style={{flex:1,}}>
-            <View style={{top:-65}}>
+    {/*top:-65 */}
+            <View style={{top:-60}}> 
               <Swiper
               
               animateCardOpacity={true}
+              verticalThreshold={SCREEN_HEIGHT/2}
+              horizontalThreshold={SCREEN_WIDTH/3}
               disableBottomSwipe
               cards={users}
               renderCard={(users) => <RenderCard users={users}/> }
               cardIndex={0}
               backgroundColor='#2d3436'
-              stackSize={4}
+              stackSize={3}
               infinite
-              onTapCard={()=> alert('Hello')}
+              onTapCard={()=>alert('Profile Name Age')}
               showSecondCard
               stackAnimationFriction={7}
               animateOverlayLabelsOpacity
