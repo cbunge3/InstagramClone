@@ -2,22 +2,25 @@ import React, { useState, useEffect } from "react";
 import { RefreshControl, View, Text, StyleSheet, Image, FlatList, TouchableOpacity,Animated,Dimensions, TouchableWithoutFeedback, PanResponder, ActivityIndicator,ScrollView,SafeAreaView } from "react-native";
 import * as Font from 'expo-font';
 import Swiper from 'react-native-deck-swiper'
+import { DrawerActions } from 'react-navigation-drawer';
+import { LinearGradient } from 'expo-linear-gradient';
+import Carousel from 'react-native-snap-carousel';
 
 
 import { f, auth, database, storage } from "../config/config";
 import { AppLoading } from "expo";
 import * as Animatable from 'react-native-animatable'
 
-import { Container, Header,Title, DeckSwiper, Card, CardItem,Left, Right } from 'native-base'
+import { Container, Content , List, ListItem ,Header,Title, DeckSwiper, Card, CardItem,Left, Right,Thumbnail, Body } from 'native-base'
 
-import { FontAwesome, Ionicons, Entypo, AntDesign } from '@expo/vector-icons'
+import { FontAwesome, Ionicons, Entypo, AntDesign, Foundation, Feather } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics';
 
 
 
 
-const SCREEN_WIDTH = Dimensions.get('screen').width
-const SCREEN_HEIGHT = Dimensions.get('screen').height
+const SCREEN_WIDTH = Dimensions.get('window').width
+const SCREEN_HEIGHT = Dimensions.get('window').height
 
 
 fetchFontsBillaBong = () => {
@@ -47,14 +50,9 @@ const Explore = ({ navigation }) => {
 
 
 
-  onRefresh = () => {
-    setFetching(true)
-    getPhotosFromUrl()
-    console.log('refresh')
-  }
 
   getPhotosFromUrl = async () => {
-    const res = await fetch('https://randomuser.me/api/?results=100')
+    const res = await fetch('https://randomuser.me/api/?results=10')
     res
         .json()
         .then(res => setUsers(res.results))
@@ -258,59 +256,59 @@ const Explore = ({ navigation }) => {
 // ------------ END OF TEST DATA ------------- //
  
 
+// ------ Deprecaited -------------//
+  // renderUsers = () => {
+  //   return imageData.map((item,index) => {
+  //     if( index < currentIndex  )
+  //     {
+  //       return null
+  //     }
+  //     else if (index == currentIndex) {
+  //       return(
+  //         <Animated.View {...panResponder.panHandlers}  key={index} style={[ rotateTranslate, {height:SCREEN_HEIGHT-290,width:SCREEN_WIDTH, paddingHorizontal :10, position:'absolute',paddingBottom: 10,}]}>
 
-  renderUsers = () => {
-    return imageData.map((item,index) => {
-      if( index < currentIndex  )
-      {
-        return null
-      }
-      else if (index == currentIndex) {
-        return(
-          <Animated.View {...panResponder.panHandlers}  key={index} style={[ rotateTranslate, {height:SCREEN_HEIGHT-290,width:SCREEN_WIDTH, paddingHorizontal :10, position:'absolute',paddingBottom: 10,}]}>
+  //             <TouchableWithoutFeedback onPress={()=> {navigation.navigate('Profile')}} style={{position:'absolute', zIndex:100}}>
+  //               <Text style={{top: SCREEN_HEIGHT-340, left: 20, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.name}</Text>
+  //             </TouchableWithoutFeedback>
 
-              <TouchableWithoutFeedback onPress={()=> {navigation.navigate('Profile')}} style={{position:'absolute', zIndex:100}}>
-                <Text style={{top: SCREEN_HEIGHT-340, left: 20, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.name}</Text>
-              </TouchableWithoutFeedback>
-
-              <Text style={{top: SCREEN_HEIGHT-340, right: 22, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700'}}>
-                {Math.floor(Math.random()*60)+18}
-              </Text>
-              <Image  style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:20}} source={item.uri}/> 
-              {/* //source={{uri: item.url}} */}
-              <Animated.View style={{opacity:likeOpacity, transform:[{rotate:'-30deg'}] ,position: 'absolute', top:50, left: 40 , zindex: 150}}>
-                <FontAwesome name='thumbs-up' size={70} color='rgb(97,213,185)'/>
-              </Animated.View>
+  //             <Text style={{top: SCREEN_HEIGHT-340, right: 22, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700'}}>
+  //               {Math.floor(Math.random()*60)+18}
+  //             </Text>
+  //             <Image  style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:20}} source={item.uri}/> 
+  //             {/* //source={{uri: item.url}} */}
+  //             <Animated.View style={{opacity:likeOpacity, transform:[{rotate:'-30deg'}] ,position: 'absolute', top:50, left: 40 , zindex: 150}}>
+  //               <FontAwesome name='thumbs-up' size={70} color='rgb(97,213,185)'/>
+  //             </Animated.View>
               
-              <Animated.View style={{ opacity:dislikeOpacity, transform:[{rotate:'30deg'}] ,position: 'absolute', top:50, right: 40 , zindex: 150}}>
-                <FontAwesome name='thumbs-down' size={70} color='red'/>
-              </Animated.View>       
+  //             <Animated.View style={{ opacity:dislikeOpacity, transform:[{rotate:'30deg'}] ,position: 'absolute', top:50, right: 40 , zindex: 150}}>
+  //               <FontAwesome name='thumbs-down' size={70} color='red'/>
+  //             </Animated.View>       
             
-          </Animated.View>
-        )
-        }
-      else {
-        return(
-          <Animated.View {...panResponder.panHandlers}  key={index} style={[{ transform:[{scale: nextCardScale}],  height:SCREEN_HEIGHT-290,width:SCREEN_WIDTH, paddingHorizontal:10, position:'absolute',paddingBottom: 10,}]}>
+  //         </Animated.View>
+  //       )
+  //       }
+  //     else {
+  //       return(
+  //         <Animated.View {...panResponder.panHandlers}  key={index} style={[{ transform:[{scale: nextCardScale}],  height:SCREEN_HEIGHT-290,width:SCREEN_WIDTH, paddingHorizontal:10, position:'absolute',paddingBottom: 10,}]}>
             
-            <TouchableWithoutFeedback onPress={()=> {navigation.navigate('Profile')}} style={{position:'absolute', zIndex:100}}>
-                <Text style={{top: SCREEN_HEIGHT-340, left: 20, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.name}</Text>
-              </TouchableWithoutFeedback>
+  //           <TouchableWithoutFeedback onPress={()=> {navigation.navigate('Profile')}} style={{position:'absolute', zIndex:100}}>
+  //               <Text style={{top: SCREEN_HEIGHT-340, left: 20, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{item.name}</Text>
+  //             </TouchableWithoutFeedback>
 
-              <Text style={{top: SCREEN_HEIGHT-340, right: 22, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700'}}>
-                {Math.floor(Math.random()*60)+18}
-              </Text>
-              <Image  style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:20}} source={item.uri}/> 
-              {/* //source={{uri: item.url}} */}
-          </Animated.View>
-        )
+  //             <Text style={{top: SCREEN_HEIGHT-340, right: 22, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700'}}>
+  //               {Math.floor(Math.random()*60)+18}
+  //             </Text>
+  //             <Image  style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:20}} source={item.uri}/> 
+  //             {/* //source={{uri: item.url}} */}
+  //         </Animated.View>
+  //       )
         
-      }
+  //     }
       
     
-    }).reverse()
+  //   }).reverse()
     
-  }
+  // }
 
 
   const restarauntData = [
@@ -333,10 +331,10 @@ const Explore = ({ navigation }) => {
       let colorCode = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')'
      
       return( //TODO: FIX PADDING ON THE LIST CLIPS CARD ON THE RIGHT, TOO CLOSE TO THE EDGE OF SCREEN
-        <TouchableOpacity  onPress={()=>Haptics.impactAsync('light')} style={{top:4}}>
-          <View  style={{height:102,width:70,right:-7,shadowRadius:3,shadowColor:colorCode,shadowOpacity:1,shadowOffset:{height:0,width:0},}}>
-              <View style={{flex:1,marginRight:10,}}>
-                <Image source={{uri:item.picture.large}}style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:15,}}/>
+        <TouchableOpacity  style={{left:10,paddingHorizontal:5,height:50,width:60}} onPress={()=>Haptics.impactAsync('light')}>
+          <View  style={{height:50,width:50}}>
+              <View style={{flex:1}}>
+                <Image source={{uri:item.picture.large}}style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:25}}/>
               </View>
           </View>
         </TouchableOpacity>
@@ -346,7 +344,7 @@ const Explore = ({ navigation }) => {
   RenderCard = ({users}) => {
     //style={{height:SCREEN_HEIGHT-310,
     return(
-    <View  style={{height:SCREEN_HEIGHT-310,width:'100%',shadowColor: 'black',
+    <View  style={{height:SCREEN_HEIGHT-260,width:'100%',shadowColor: 'black',
       shadowOffset: {
         width: 0,
         height: 2,
@@ -357,16 +355,100 @@ const Explore = ({ navigation }) => {
     >
 
       <TouchableWithoutFeedback style={{position:'absolute', zIndex:100}}>
-        <Text style={{top: SCREEN_HEIGHT-340, left: 20, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700', borderColor:'black'}}>{users.name.first}</Text>
+        <Text style={{top: SCREEN_HEIGHT-360, left: 20, color:'white', position:'absolute', zIndex:100, fontSize:30, fontFamily:'Nunito', borderColor:'black'}}>{users.name.first}</Text>
       </TouchableWithoutFeedback>
-
-      <Text style={{top: SCREEN_HEIGHT-340, right: 22, color:'white', position:'absolute', zIndex:100, fontSize:30, fontWeight:'700'}}>
-        {users.dob.age}
+      <Text style={{top: SCREEN_HEIGHT-320, left: 20, color:'white', position:'absolute', zIndex:100, fontSize:15, fontFamily:'Nunito',fontWeight:'700'}}>
+        {users.dob.age} • {users.location.city}, {users.location.state}
       </Text>
       <Image  style={{ flex:1,height:null, width:null, resizeMode:'cover',borderRadius:20}} source={{uri:users.picture.large}}/> 
-
+      <LinearGradient
+          colors={['transparent','rgba(0,0,0,0.8)', ]}
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height:300,
+            borderRadius:20
+         
+          }}
+        />
   
     </View>
+    )
+  }
+
+
+  CarosuelComponent = () => {
+    return(
+    <Carousel
+    ref={(c) => { carousel = c; }}
+    layout={'stack'} 
+    layoutCardOffset={290}
+    data={users}
+    sliderWidth={400}
+    itemWidth={400}
+    swipeThreshold={60}
+    inactiveSlideOpacity={0.9}
+    enableSnap={true}
+    renderItem={renderCarosuel}
+  />
+    )
+  }
+
+  renderCarosuel = ({ item }) => {
+    return(
+    <View style={{alignItems:'center',marginVertical:10,shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowRadius: 5,
+    shadowOpacity: 0.4}}>
+      <Image  style={{height:SCREEN_HEIGHT-400, width: 300, borderRadius: 25}} source={{uri:item.picture.large}}/> 
+      <LinearGradient
+          colors={['transparent','rgba(0,0,0,0.4)', ]}
+          style={{
+            position: 'absolute',
+        
+            height:SCREEN_HEIGHT-400,
+            width:300,
+            borderRadius:20
+         
+          }}
+        />
+    </View>
+    )
+  }
+
+
+  //FLATLIST FOR NEW DESIGN CONCEPT
+  renderFlatlist = ({item}) => {
+    return(
+      <View style={{flex:1}}>
+       <Content>
+         <List>
+           <ListItem noBorder style={{borderBottomWidth:0}}avatar>
+             <Left style={{paddingLeft:20}}>
+             <Thumbnail  style={{height:30, width:30, borderRadius:7}} source={{uri:item.picture.large}}/>
+
+             </Left>
+             <Body>
+               <Text style={{fontWeight:'bold'}}>{item.name.first}</Text>
+               <Text style={{fontSize:10,color:'grey'}} note>{item.gender === 'male' ? 'M': 'F'}, {item.dob.age} • {item.location.city}, {item.location.state}</Text>
+             </Body>
+             <Right style={{paddingRight:40,justifyContent: 'flex-end',}}>
+               <Text style={{fontSize:10,color:'grey'}} note>{item.location.timezone.offset}</Text>
+             </Right>
+           </ListItem>
+           
+         </List>
+         <View style={{alignItems:'center',justifyContent: 'center',}}>
+            {/* <Image  style={{height:400, width: 300, borderRadius: 25}} source={{uri:item.picture.large}}/>  */}
+            <CarosuelComponent/>
+        </View>
+       </Content>
+       </View>
     )
   }
 
@@ -391,10 +473,15 @@ const Explore = ({ navigation }) => {
   //HEADER BAR CONTAINER
   return (
       <Container>
-        <Header  style={{borderBottomWidth:0, height:70,backgroundColor:'#eee'}}>
-          <Left>
-            <Title style={{color:'rgb(97,213,185)',fontSize:20, fontFamily:'Nunito'}}>Around You  </Title>
-          </Left>
+
+        <Header  style={{borderBottomWidth:0,height:90,backgroundColor:'rgb(254,254,254)'}}>
+              <Title style={{color:'rgb(97,213,185)',fontSize:50, fontFamily:'Nunito',marginLeft:10}}>Welcome</Title>
+          <Right>
+            <TouchableOpacity onPress={()=> navigation.navigate('Messages')}>
+              <Feather name='sliders' size={30} color='lightgrey' style={{marginRight:10}}/>
+            </TouchableOpacity>
+          </Right>
+        
           {/* <Body style={{borderWidth:1,borderColor:'red'}}> */}
             {/* <Title style={{color:'rgb(97,213,185)' ,bottom:10,fontSize:30, fontFamily:'Billabong'}}>For You</Title> */}
           {/* </Body> */}
@@ -419,41 +506,77 @@ const Explore = ({ navigation }) => {
           <ActivityIndicator size='large'/>
         </View>
       ) : (
-        <View style={{flex:1,backgroundColor:'#eee'}}>
-          <View style={{height:120,width:'100%',flexDirection:'row'}}>
+      <ScrollView style={{backgroundColor:'rgb(254,254,254)'}}>
+        <View style={{flex:1,backgroundColor:'rgb(254,254,254)'}}>
+          <View style={{right:5,justifyContent: 'center', flexDirection:'row',paddingHorizontal:30}}>
 
             <FlatList
-            showsHorizontalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl
-              refreshing={fetching}
-              onRefresh={()=> onRefresh()}
-              />}
+              showsHorizontalScrollIndicator={false}
               horizontal={true}
               data={users}
               keyExtractor={(item,index)=> index.toString()}
               renderItem={flatlistRestaraunts}
+              contentContainerStyle={{height:80,paddingVertical:15,paddingRight:10}}
               ListHeaderComponent={
-                <View  style={{height:107,width:70,right:-7,shadowRadius:3,shadowColor:'red',shadowOpacity:1,shadowOffset:{height:0,width:0},}}>
-                  <View style={{flex:1,marginRight:10,marginTop:4}}>
-                    <Image source={require('../assets/pic1.jpeg')}style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:15,}}/>
-                    <TouchableWithoutFeedback style={{position:'absolute',zIndex:100}} onPress={()=> navigation.navigate('Upload')} onPressIn={()=>Haptics.impactAsync('light')} >
-                      <AntDesign style={{zIndex:100,position:'absolute',top:60,right: 16}} name='pluscircleo' size={30} color='white'/>
-                    </TouchableWithoutFeedback>
+                <View  style={{height:50,width:50,left:5}}>
+                  <View style={{flex:1}}>
+                    <Image source={require('../assets/pic1.jpeg')}style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:25,}}/>
+                    {/* <TouchableWithoutFeedback style={{position:'absolute',zIndex:100}} onPress={()=> navigation.navigate('Upload')} onPressIn={()=>Haptics.impactAsync('light')} > */}
+                      {/* <View style={{borderColor: 'rgb(97,213,185)', borderWidth:2,height:40,width:40,borderRadius:25,backgroundColor:'white',position:'absolute',bottom:5,right:11}}>
+                        <Entypo style={{zIndex:100,position:'absolute',margin:3}} name='plus' size={30} color='rgb(97,213,185)'/>
+                      </View> */}
                   </View>
-              </View>
-             
-              }
+                </View>
+                }
               />
-
           </View>
+       
+        
 
 
           <View style={{flex:1,}}>
-    {/*top:-65 */}
-            <View style={{top:-60}}> 
+            <View style={{borderWidth:1,borderColor:'red',height:50}}>
+              <View style={{flexDirection:'row',top:7}}>
+                <View style={{paddingLeft:50}}>
+                  <Text>
+                  •
+                  </Text>
+                </View>
+                <View style={{paddingLeft:75}}>
+                  <Text>
+                  •
+                  </Text>
+                </View>
+                <View style={{paddingLeft:65}}>
+                  <Text>
+                  •
+                  </Text>
+                </View>
+              </View>
+                <View style={{flexDirection:'row',top:10}}>
+                  <View style={{paddingLeft:30}}>
+                    <Text style={{fontFamily:'Nunito'}}>Popular</Text>
+                  </View>
+                  <View style={{paddingLeft:30}}>
+                    <Text style={{fontFamily:'Nunito'}}>Trending</Text>
+                  </View>
+                  <View style={{paddingLeft:30}}>
+                    <Text style={{fontFamily:'Nunito'}}>New</Text>
+                  </View>
+                </View>
+            </View>
+
+            <View style={{flex:1, borderColor:'blue',borderWidth:1}}>
+
+                <FlatList
+                data={users}
+                keyExtractor={(item,index) => index.toString()}
+                renderItem={renderFlatlist}
+                />
+            </View>
+            {/* <View style={{top:-60}}> 
               <Swiper
-              
+             
               animateCardOpacity={true}
               verticalThreshold={SCREEN_HEIGHT/2}
               horizontalThreshold={SCREEN_WIDTH/3}
@@ -477,8 +600,8 @@ const Explore = ({ navigation }) => {
                 }
               }}
               />
-            </View>
-          </View>
+            </View> */}
+        </View>
 
           {/* <View style={{height:215,width:SCREEN_WIDTH}}>
               <ScrollView  horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -488,40 +611,14 @@ const Explore = ({ navigation }) => {
               </ScrollView> 
           </View> */}
 
-
+      
         </View>
-
-
-          // ------------ COMMENTS SECTION - - WILL NEED TO BE REWORKED ------------------------//
-            //   <View style={styles.flatlistUserInfoTop}>
-            //     <Text>{item.posted}</Text>
-            //     <TouchableOpacity onPress={()=> {navigation.navigate('User', {userId: item.authorId})}}>
-            //         <Text>{item.author}</Text>
-            //     </TouchableOpacity>
-            //   </View>
-
-            //   <View>
-            //     <Image source={{ uri: item.url }} style={styles.imageSource} />
-            //   </View>
-
-            //   <View style={styles.flatlistUserCaption}>
-            //     <Text>{item.caption}</Text>
-            //     <TouchableOpacity onPress={()=> {navigation.navigate('Comments'), {userId: item.id}}}>
-            //       <Text style={styles.flatlistCommentsSection}>
-            //         See Comments Below
-            //       </Text>
-            //     </TouchableOpacity>
-            //   </View>
-
-            //   <View 
-            //     style={styles.flatlistMainViewBottomBorder}>
-
-            //   </View>
-
-            // </View>
+      </ScrollView>
+      
 
       )}
-    {/* </View> */}
+     
+
 
     </Container>
   );

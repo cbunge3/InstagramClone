@@ -39,7 +39,7 @@ const SquadMembers = (props) => {
                 renderItem={({item}) => {
                     return(
                         <View>
-                            <Image source={{uri:item.picture.large}}style={{resizeMode:'cover',width: '100%', height: 200}}/>
+                            <Image source={{uri:item.picture.large}}style={{resizeMode:'cover',width: 200, height: 200,borderRadius:100}}/>
                             <Text>
                                 {item.name.first}
                             </Text>

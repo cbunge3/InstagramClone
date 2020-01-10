@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack'
 import { createDrawerNavigator } from 'react-navigation-drawer';
+
 import { createAppContainer } from 'react-navigation';
 import React, { useState, useEffect } from "react";
 import { 
@@ -31,133 +32,79 @@ import SquadMembers from './screens/SquadMembers'
 
 import AddButton from './components/AddButton'
 
-
-
+const SCREEN_HEIGHT = Dimensions.get('window').height
+const SCREEN_WIDTH = Dimensions.get('window').width
 
 import {Feather, AntDesign, MaterialCommunityIcons, MaterialIcons, Ionicons, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
-// const BottomTabNav = createBottomTabNavigator({
-//   'Gallery': Explore,
-//   'Upload': Upload,
-//   'Profile': Profile,
-//   'Messages': Messages,
-//   'SquadMembers': SquadMembers
-// },
-// {
-//   tabBarComponent: ({navigation}) => {
-//     let tintColor = "rgb(97,213,185)";
-
-//     return (
-//       <View style={{justifyContent: 'center',alignItems:'center',bottom:30}}>
-//         <AddButton navigation={ navigation }/>
-//       </View>
-
-      
-//     // <View style={{ height: 60, width: '100%', display: "flex", flexDirection: "row", backgroundColor:'#eee'}}>
-
-//     //     <View style={{ flex: 1 }}>
-//     //      <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}}>
-//     //        <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:7}}>
-//     //           <Ionicons name='md-search' size={35}  color={tintColor}/>
-//     //         </View>
-//     //       </TouchableOpacity>
-//     //     </View>
-
-//     //     <View style={{flex:1, display:'flex', alignItems:'center'}}>
-//     //       {/* <AddButton navigation={ navigation }/> */}
-         
-//     //     </View>
-
-//     //    <View style={{ flex: 1 }}>
-//     //      <TouchableOpacity onPress={()=> { navigation.navigate('Profile')}}>
-//     //        <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10 }}>
-//     //           <Feather  name='user' size={32} color={tintColor}/>
-//     //         </View>
-//     //     </TouchableOpacity>
-//     //   </View>
-
-//     // </View>
-//     )
-//   }
-// }
-// )
-
-const drawer = createDrawerNavigator({
+const BottomTabNav = createBottomTabNavigator({
   'Gallery': Explore,
   'Upload': Upload,
   'Profile': Profile,
   'Messages': Messages,
   'SquadMembers': SquadMembers
-},{
-  Home:{
-    screen:Explore,
-    navigationOptions:{}
+},
+{
+  tabBarComponent: ({navigation}) => {
+    let tintColor = "rgb(97,213,185)";
+
+    return (
+      // <View style={{justifyContent: 'center',alignItems:'center',bottom:30}}>
+      //   <AddButton navigation={ navigation }/>
+      // </View>
+
+      
+    <View style={{ height: 80, width: '100%', display: "flex", flexDirection: "row", backgroundColor:'reg(254,254,254)'}}>
+
+        <View style={{ flex: 1 }}>
+         <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}}>
+           <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:7}}>
+              <Ionicons name='md-search' size={35}  color={tintColor}/>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        {/* <View style={{flex:1, display:'flex', alignItems:'center'}}>
+          <AddButton navigation={ navigation }/>
+         
+        </View> */}
+
+       <View style={{ flex: 1 }}>
+         <TouchableOpacity onPress={()=> { navigation.navigate('Profile')}}>
+           <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10 }}>
+              <Feather  name='user' size={32} color={tintColor}/>
+            </View>
+        </TouchableOpacity>
+      </View>
+
+    </View>
+    )
   }
 }
 )
 
 
-//DEPRECIATED ------------------------------------------------------------------
-const TabStack = createBottomTabNavigator(
-  {
-    Gallery:
-    {
-      screen: Explore,
-      navigationOptions:{
-        tabBarIcon: ({ tintColor }) => (
-          <MaterialIcons name="view-headline" size={35} color={tintColor} />
-        )
-      } 
-    },
-    Upload: // HOW TO GET THIS BUTTON TO NOT GO TO UPLOAD SCREEN WHEN PRESSED OUTSIDE OF THE PLUS AREA
-    {
-      screen:Upload, // HOW TO CHANGE THIS TO NOT GO TO BLANK SCREEN
-      navigationOptions:{
-        tabBarVisible: false,
-        tabBarIcon: ({ tintColor }) => (
-          <AddButton />
-          
-        ) //TAB BAR ON PRESS
-      }
-    },
-    Profile:
-    {
-      // TODO: MAKE OWN BUTTON COMPONENTS FOR EACH TAB ICON
-      screen:Profile,
-      navigationOptions:{
-        tabBarIcon: ({ tintColor}) => (
-            <Feather name='user' size={32} color={tintColor}/>
-        )
-      }
-    }
-  }, 
-  {
-    tabBarOptions: {
-      // activeTintColor:'red',
-      // inactiveTintColor:'black',
-      style: {
-        backgroundColor:  '#eee',
-        borderTopWidth:0,
-        height:42,
-        paddingTop:10,
-  
-        
-      },
-      showLabel: false 
-    }
-  }
-)
-//----------------------------------------------------------------------------
+
+
+// const drawer = createDrawerNavigator({
+//   'Gallery': Explore,
+//   'Upload': Upload,
+//   'Profile': Profile,
+//   'Messages': Messages,
+//   'SquadMembers': SquadMembers
+// })
+
 
 
 const MainStack = createStackNavigator(
   {
     Home:
     {
-      screen: drawer,
-      navigationOptions: {}
+      screen: BottomTabNav,
+      navigationOptions:{}
+     
     },
     User:
     {
@@ -174,6 +121,9 @@ const MainStack = createStackNavigator(
     initalRouteName: 'Home',
     mode:'modal',
     headerMode: 'none'
+  },
+  {
+
   }
 )
 
@@ -205,12 +155,4 @@ export default App = () => {
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  
-});
+
