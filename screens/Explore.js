@@ -475,7 +475,7 @@ const Explore = ({ navigation }) => {
       <Container>
 
         <Header  style={{borderBottomWidth:0,height:90,backgroundColor:'rgb(254,254,254)'}}>
-              <Title style={{color:'rgb(97,213,185)',fontSize:50, fontFamily:'Nunito',marginLeft:10}}>Welcome</Title>
+              <Title style={{color:'rgb(97,213,185)',fontSize:50, fontFamily:'Nunito',marginLeft:10}}>Hello,Cory</Title>
           <Right>
             <TouchableOpacity onPress={()=> navigation.navigate('Messages')}>
               <Feather name='sliders' size={30} color='lightgrey' style={{marginRight:10}}/>
@@ -529,6 +529,8 @@ const Explore = ({ navigation }) => {
                 </View>
                 }
               />
+
+              
           </View>
        
         

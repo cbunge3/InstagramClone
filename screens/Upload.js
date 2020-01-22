@@ -56,6 +56,7 @@ const Upload = ({ navigation }) => {
     checkPermissions = async () => {
         const { status } = await Permissions.askAsync(Permissions.CAMERA)
         setCamPerm(true)
+        
 
     }    
     
@@ -142,7 +143,7 @@ const Upload = ({ navigation }) => {
 
                 <View style={{flexDirection:'row', justifyContent: 'space-between',alignItems:'flex-end'}}>
                     
-                    <AntDesign name='left' onPress={()=> navigation.goBack()} size={40} style={{color:'white', marginBottom: 20, paddingLeft: 20,}}/>
+                    <AntDesign name='left' onPress={()=> navigation.navigate('ViewAll')} size={40} style={{color:'white', marginBottom: 20, paddingLeft: 20,}}/>
                     <View style={{marginBottom:20}}>
                         <MaterialCommunityIcons onPress={()=>snap()} name='circle-outline' style={{color:'white'}} size={100}/>
                     </View>

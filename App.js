@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack'
 import { createDrawerNavigator } from 'react-navigation-drawer';
 
-import { createAppContainer } from 'react-navigation';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import React, { useState, useEffect } from "react";
 import { 
     View,
@@ -29,6 +29,14 @@ import UserProfile from './screens/UserProfile'
 import Comments from './screens/Comments'
 import Messages from './screens/Messages'
 import SquadMembers from './screens/SquadMembers'
+import SplashScreen from './screens/SplashScreen'
+import RegisterScreen from './screens/RegisterScreen'
+import LoginScreen from './screens/LoginScreen'
+import AllStories from './screens/AllStories'
+import SquadMap from './screens/SquadMap'
+import SquadGroupChat from './screens/SquadGroupChat'
+import BusinessFeed from './screens/BusinessFeed'
+import Settings from './screens/Settings'
 
 import AddButton from './components/AddButton'
 
@@ -48,7 +56,7 @@ const BottomTabNav = createBottomTabNavigator({
 },
 {
   tabBarComponent: ({navigation}) => {
-    let tintColor = "rgb(97,213,185)";
+    let tintColor = "rgb(117,117,117)";
 
     return (
       // <View style={{justifyContent: 'center',alignItems:'center',bottom:30}}>
@@ -56,12 +64,36 @@ const BottomTabNav = createBottomTabNavigator({
       // </View>
 
       
-    <View style={{ height: 80, width: '100%', display: "flex", flexDirection: "row", backgroundColor:'reg(254,254,254)'}}>
+    <View style={{ height: 70, width: '100%', display: "flex", flexDirection: "row", backgroundColor:'reg(254,254,254)'}}>
 
         <View style={{ flex: 1 }}>
          <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}}>
            <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:7}}>
-              <Ionicons name='md-search' size={35}  color={tintColor}/>
+              <MaterialCommunityIcons name='home-outline' size={25}  color={tintColor}/>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ flex: 1 }}>
+         <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}}>
+           <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:7}}>
+              <Feather name='users' size={25}  color={tintColor}/>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ flex: 1 }}>
+         <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}}>
+           <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:7}}>
+              <MaterialCommunityIcons name='cards-outline' size={25}  color={tintColor}/>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{ flex: 1 }}>
+         <TouchableOpacity onPress={()=> { navigation.navigate('Gallery')}}>
+           <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:7}}>
+              <MaterialCommunityIcons name='store' size={25}  color={tintColor}/>
             </View>
           </TouchableOpacity>
         </View>
@@ -74,7 +106,7 @@ const BottomTabNav = createBottomTabNavigator({
        <View style={{ flex: 1 }}>
          <TouchableOpacity onPress={()=> { navigation.navigate('Profile')}}>
            <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10 }}>
-              <Feather  name='user' size={32} color={tintColor}/>
+              <Feather  name='user' size={25} color={tintColor}/>
             </View>
         </TouchableOpacity>
       </View>
@@ -88,13 +120,138 @@ const BottomTabNav = createBottomTabNavigator({
 
 
 
-// const drawer = createDrawerNavigator({
-//   'Gallery': Explore,
-//   'Upload': Upload,
-//   'Profile': Profile,
-//   'Messages': Messages,
-//   'SquadMembers': SquadMembers
-// })
+
+
+const SwitchStackNav = createSwitchNavigator({
+  'Splash': SplashScreen, 
+
+  'Login': LoginScreen,
+
+  'Register': RegisterScreen,
+
+  
+
+},
+)
+
+const HomeStack = createStackNavigator(
+  {
+    Auth: SwitchStackNav,
+    ViewAll: Explore
+  },
+  {
+    headerMode: 'none',
+    navigationOptions: {
+        headerVisible: false,
+    }
+}
+)
+
+const SquadStack = createStackNavigator(
+  {
+    SquadScreen: SquadMembers,
+    SquadMap: SquadMap,
+    SquadGroupChatScreen: SquadGroupChat
+  }
+)
+
+const SwipeDeckStack = createStackNavigator( // TODO: remeber that this is tied to its own stack so it does not follow same rules for header missing
+  {
+    DeckSwiper: Explore,
+    MessageScreen: Messages
+  },
+)
+
+const RestaurantStack = createStackNavigator(
+  {
+   BusinessFeed : Upload
+  },
+  {
+  headerMode: 'none',
+  navigationOptions: 
+  { 
+    tabBarVisible: false,
+    headerVisible: false
+  } 
+  }
+)
+
+const ProfileStack = createStackNavigator(
+  {
+    SettingsScreen: Settings
+  }
+)
+
+const NewBottomTabNav = createBottomTabNavigator(
+  {
+    'Feed': HomeStack,
+    'Squad': SquadStack,
+    'Swiper': SwipeDeckStack,
+    'Restaurants': RestaurantStack,
+    'Profile': ProfileStack
+  },
+  {
+    tabBarComponent: ({navigation}) => {
+      let tintColor = "rgb(117,117,117)";
+  
+      return (
+        // <View style={{justifyContent: 'center',alignItems:'center',bottom:30}}>
+        //   <AddButton navigation={ navigation }/>
+        // </View>
+  
+        
+      <View style={{ height: 70, width: '100%', display: "flex", flexDirection: "row", backgroundColor:'reg(254,254,254)'}}>
+  
+          <View style={{ flex: 1 }}>
+           <TouchableOpacity onPress={()=> { navigation.navigate('Swiper')}}>
+             <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10}}>
+                <MaterialCommunityIcons name='home-outline' size={25}  color={tintColor}/>
+              </View>
+            </TouchableOpacity>
+          </View>
+  
+          <View style={{ flex: 1 }}>
+           <TouchableOpacity onPress={()=> { navigation.navigate('Squad')}}>
+             <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10}}>
+                <Feather name='users' size={25}  color={tintColor}/>
+              </View>
+            </TouchableOpacity>
+          </View>
+  
+          <View style={{ flex: 1 }}>
+           <TouchableOpacity onPress={()=> { navigation.navigate('Swiper')}}>
+             <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10}}>
+                <MaterialCommunityIcons name='cards-outline' size={25}  color={tintColor}/>
+              </View>
+            </TouchableOpacity>
+          </View>
+  
+          <View style={{ flex: 1 }}>
+           <TouchableOpacity onPress={()=> { navigation.navigate('BusinessFeed')}}>
+             <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10}}>
+                <MaterialCommunityIcons name='store' size={25}  color={tintColor}/>
+              </View>
+            </TouchableOpacity>
+          </View>
+  
+          {/* <View style={{flex:1, display:'flex', alignItems:'center'}}>
+            <AddButton navigation={ navigation }/>
+           
+          </View> */}
+  
+         <View style={{ flex: 1 }}>
+           <TouchableOpacity onPress={()=> { navigation.navigate('Profile')}}>
+             <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10 }}>
+                <Feather  name='user' size={25} color={tintColor}/>
+              </View>
+          </TouchableOpacity>
+        </View>
+  
+      </View>
+      )
+    }
+  }
+)
 
 
 
@@ -102,9 +259,9 @@ const MainStack = createStackNavigator(
   {
     Home:
     {
-      screen: BottomTabNav,
-      navigationOptions:{}
-     
+      screen: SwitchStackNav,
+      navigationOptions:
+      {}
     },
     User:
     {
@@ -129,9 +286,9 @@ const MainStack = createStackNavigator(
 
 
 
-
-// const TabContainer =  createAppContainer(BottomTabNav)
-const StackContainer = createAppContainer(MainStack)
+// const SwitchContainer = createAppContainer(SwitchStackNav)
+const TabContainer =  createAppContainer(NewBottomTabNav)
+// const StackContainer = createAppContainer(MainStack)
 
 
 export default App = () => {
@@ -151,7 +308,7 @@ export default App = () => {
 
 
   return(
-      <StackContainer/>
+      <TabContainer/>
   )
 }
 
