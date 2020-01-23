@@ -37,6 +37,7 @@ import SquadMap from './screens/SquadMap'
 import SquadGroupChat from './screens/SquadGroupChat'
 import BusinessFeed from './screens/BusinessFeed'
 import Settings from './screens/Settings'
+import FeedScreen from './screens/FeedScreen'
 
 import AddButton from './components/AddButton'
 
@@ -137,7 +138,8 @@ const SwitchStackNav = createSwitchNavigator({
 const HomeStack = createStackNavigator(
   {
     Auth: SwitchStackNav,
-    ViewAll: Explore
+    Feed: FeedScreen,
+    ViewAll: AllStories
   },
   {
     headerMode: 'none',
@@ -164,7 +166,7 @@ const SwipeDeckStack = createStackNavigator( // TODO: remeber that this is tied 
 
 const RestaurantStack = createStackNavigator(
   {
-   BusinessFeed : Upload
+   BusinessFeed : BusinessFeed
   },
   {
   headerMode: 'none',
@@ -203,7 +205,7 @@ const NewBottomTabNav = createBottomTabNavigator(
       <View style={{ height: 70, width: '100%', display: "flex", flexDirection: "row", backgroundColor:'reg(254,254,254)'}}>
   
           <View style={{ flex: 1 }}>
-           <TouchableOpacity onPress={()=> { navigation.navigate('Swiper')}}>
+           <TouchableOpacity onPress={()=> { navigation.navigate('Feed')}}>
              <View style={{ display: "flex", alignItems: "center", height: "100%",paddingTop:10}}>
                 <MaterialCommunityIcons name='home-outline' size={25}  color={tintColor}/>
               </View>
