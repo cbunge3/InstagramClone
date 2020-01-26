@@ -14,16 +14,36 @@ const SquadMembers = (props) => {
     const [isLoading, setIsLoading ] =useState(true)
 
     getPhotosFromUrl = async () => {
-        const res = await fetch('https://randomuser.me/api/?results=1000')
+        const res = await fetch('https://api.unsplash.com/photos/random?count=30&client_id=cdd66b5e10edff3c50766086a5c53464963e241def2f481c8f851f3cd2a3c9d9')
         res
             .json()
-            .then(res => setUsers(res.results))
+            .then(res => setUsers(res.data))
             .then(res => setIsLoading(false))
     }
 
+    const axios = require('axios');
+    loadWallpapers = () => {
+        axios
+          .get(
+            'https://api.unsplash.com/photos/random?count=30&client_id=cdd66b5e10edff3c50766086a5c53464963e241def2f481c8f851f3cd2a3c9d9'
+          )
+          .then((response) => {
+              console.log(response.data);
+              setUsers(response.data),
+              setIsLoading(false)
+            }
+          )
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally( ()=> {
+            console.log('request completed');
+          });
+      };
+
 
     useEffect(()=>{
-        getPhotosFromUrl()
+        loadWallpapers()
     },[])
 
     return(
@@ -38,11 +58,8 @@ const SquadMembers = (props) => {
                 keyExtractor={(item,index) => index.toString()}
                 renderItem={({item}) => {
                     return(
-                        <View>
-                            <Image source={{uri:item.picture.large}}style={{resizeMode:'cover',width: 200, height: 200,borderRadius:100}}/>
-                            <Text>
-                                {item.name.first}
-                            </Text>
+                        <View style={{flex:1}}>
+                            <Image source={{uri:item.urls.regular}}style={{resizeMode:'cover',width: 200, height: 200,borderRadius:100}}/>
                         </View>
                     )
                 }}

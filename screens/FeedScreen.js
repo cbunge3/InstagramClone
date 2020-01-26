@@ -43,10 +43,34 @@ const FeedScreen = ({ navigation }) => {
     const [ fontloaded, setFontLoaded ] = useState(false)
     const [ users, setUsers ] = useState([])
     const [ isLoading, setIsLoading ] = useState(true)
+    const [ page, setPage ] = useState(1)
+
+
+
+
+    const axios = require('axios');
+    loadWallpapers = () => {
+        axios
+          .get(
+            'https://api.unsplash.com/photos/random?count=30&client_id=cdd66b5e10edff3c50766086a5c53464963e241def2f481c8f851f3cd2a3c9d9'
+          )
+          .then((response) => {
+              console.log(response.data);
+              setUsers(response.data),
+              setIsLoading(false)
+            }
+          )
+          .catch((error) => {
+            console.log(error);
+          })
+          .finally( ()=> {
+            console.log('request completed');
+          });
+      };
 
 
     getPhotosFromUrl = async () => {
-        const res = await fetch('https://randomuser.me/api/?results=10')
+        const res = await fetch('https://randomuser.me/api/?results=10?page='+page)
         res
             .json()
             .then(res => setUsers(res.results))
@@ -54,7 +78,7 @@ const FeedScreen = ({ navigation }) => {
       }
     
     useEffect(()=>{
-        getPhotosFromUrl()
+        loadWallpapers()
     },[])
 
     flatlistStories = ({item}) => {       
@@ -68,7 +92,7 @@ const FeedScreen = ({ navigation }) => {
                         shadowRadius: 6,
                         shadowOpacity: 0.6}}>
                 <View style={{flex:1}}>
-                  <Image source={{uri:item.picture.large}}style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:20}}/>
+                  <Image source={{uri:item.urls.regular}}style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:20}}/>
                   <LinearGradient
                         colors={['transparent','rgba(0,0,0,0.4)', ]}
                         style={{
@@ -78,18 +102,91 @@ const FeedScreen = ({ navigation }) => {
                             borderRadius:20}}
                     />
                     <Text style={{position:'absolute',color:'white',top:150,fontSize:12,alignSelf:'center',fontFamily:'Nunito'}}>
-                        {item.name.first}
+                        {item.user.first_name}
                     </Text>
                     <Image style={{height:50,width:50,borderRadius:25,
                         position:'absolute',
                         alignSelf:'center',
                         borderWidth:.5,
                         borderColor:'black',
-                        top:65}} source={{uri:item.picture.thumbnail}}/>
+                        top:65}} source={{uri:item.urls.thumb}}/>
                 </View>
             </View>
           </TouchableOpacity>
         )
+      }
+
+      flatlistActivites = ({item}) => {
+          return(
+            <Card style={{flex: 1}}>
+                <CardItem>
+                <Body style={{flexDirection:'row'}}>
+                    <Image style={{height:300,width:width/1.5,borderRadius:20}} source={{uri:item.urls.regular}}/>
+                    <LinearGradient
+                        colors={['transparent','rgba(0,0,0,0.2)', ]}
+                        style={{
+                            position: 'absolute',
+                            height:300,
+                            width:width/1.5,
+                            borderRadius:20}}
+                    />
+                    <View style={{flex:1,position:'absolute',paddingLeft:20}}>
+                        <Text style={{fontFamily:'Nunito', fontSize:20,color:'white',
+                        alignSelf:'center',top:260}}>
+                            {item.user.first_name}, 23
+                        </Text>
+                    </View>
+                    <Right>
+                        <View style={{flex:1, justifyContent:'flex-start'}}>
+                            <TouchableOpacity style={{paddingRight:20, paddingBottom:20}}>
+                                <MaterialCommunityIcons name='dots-vertical' size={20} color={'rgb(117,117,117)'}/>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{paddingRight:20}}>
+                                <MaterialCommunityIcons name='heart-outline' size={20} color={'rgb(117,117,117)'}/>
+                            </TouchableOpacity>
+                                <Text style={{paddingBottom:10,paddingLeft:3,color: 'rgb(117,117,117)', fontSize:12,fontFamily:'Nunito'}}>
+                                    {item.likes}
+                                </Text>
+                            <TouchableOpacity style={{paddingRight:20}}>
+                                <MaterialCommunityIcons name='message-outline' size={20} color={'rgb(117,117,117)'}/>
+                            </TouchableOpacity>
+                            <Text style={{paddingLeft:3,color:'rgb(117,117,117)', fontSize:12,fontFamily:'Nunito'}}>
+                                {item.downloads}
+                            </Text>
+                        </View>
+                    </Right>
+                </Body>
+
+                </CardItem>
+                <View style={{width:width/1.5,flexDirection:'row',marginLeft:20}}>
+                    <Left style={{}}>
+                        <View style={{borderColor:'rgb(117,117,117)',borderWidth:.5,paddingVertical:7,paddingHorizontal:15,borderRadius:10}}>
+                            <Text style={{color:'rgb(87,117,206)'}}>
+                                Work
+                            </Text>
+                        </View>
+                    </Left>
+                    <Left style={{}}>
+                        <View style={{borderColor:'rgb(117,117,117)',borderWidth:.5,paddingVertical:7,paddingHorizontal:15,borderRadius:10}}>
+                            <Text style={{color:'rgb(87,117,206)'}}>
+                                Startup
+                            </Text>
+                        </View>
+                    </Left>
+                    <Right style={{}}>
+                        <View style={{borderColor:'rgb(117,117,117)',borderWidth:.5,paddingVertical:7,paddingHorizontal:15,borderRadius:10}}>
+                            <Text style={{color:'rgb(87,117,206)'}}>
+                                Fridays
+                            </Text>
+                        </View>
+                    </Right>
+                </View>
+            
+                <Right style={{alignSelf:"flex-end", paddingRight:20}}>
+                    <Text style={{fontFamily:'Nunito',fontSize:10,color:'rgb(117,117,117)',fontWeight:'bold',paddingBottom:5}}> 2 hours ago </Text>
+                </Right>
+        </Card>
+          )
       }
 
 
@@ -115,7 +212,7 @@ const FeedScreen = ({ navigation }) => {
     
                 <FeedTitleUserName/>
 
-            <ScrollView scrollEventThrottle={16}>
+            <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false}>
 
                 <FeedHeader1/>
 
@@ -187,36 +284,12 @@ const FeedScreen = ({ navigation }) => {
                     </Header>
                 </View>
 
-                <Card style={{flex: 1}}>
-                    <CardItem>
-                    <Body style={{flexDirection:'row'}}>
-                        <Image style={{height:300,width:width/1.5,borderRadius:20}} source={require('../assets/pic2.jpeg')}/>
-                        <Right>
-                            <View style={{flex:1, justifyContent:'flex-start'}}>
-                                <TouchableOpacity style={{paddingRight:20}}>
-                                    <MaterialCommunityIcons name='dots-vertical' size={20}/>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{paddingRight:20}}>
-                                    <MaterialCommunityIcons name='heart-outline' size={20}/>
-                                </TouchableOpacity>
-                                <Text style={{paddingRight:20}}>
-                                    12
-                                </Text>
-                                <TouchableOpacity style={{paddingRight:20}}>
-                                    <MaterialCommunityIcons name='message-outline' size={20}/>
-                                </TouchableOpacity>
-                                <Text style={{paddingRight:20}}>
-                                    56
-                                </Text>
-                            </View>
-                        </Right>
-                    </Body>
+                <FlatList 
+                data={users}
+                keyExtractor={(item,index) => index.toString()}
+                renderItem={flatlistActivites}
+                />
 
-                    </CardItem>
-                    <Right style={{alignSelf:"flex-end", paddingRight:20}}>
-                        <Text style={{fontFamily:'Nunito',fontSize:14,color:'rgb(117,117,117)',fontWeight:'bold'}}> 2 hours ago </Text>
-                    </Right>
-                </Card>
 
             </ScrollView>
 
