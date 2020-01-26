@@ -11,7 +11,10 @@ import {
     FlatList
 } from "react-native";
 import { 
-    Container, 
+    Container,
+    Card,
+    CardItem,
+    Thumbnail,
     Content , 
     Header,
     Title, 
@@ -20,6 +23,15 @@ import {
     Body } from 'native-base'
 import * as Haptics from 'expo-haptics';
 import { AppLoading } from "expo";
+import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+
+import FeedHeader1 from '../components/FeedHeader1'
+import FeedTitleHello from '../components/FeedTitleHello'
+import FeedTitleUserName from '../components/FeedTitleUserName'
+import FeedScreenCircle from '../components/FeedScreenCircle'
+
+
 
 const { height,width } = Dimensions.get('window')
 
@@ -31,6 +43,7 @@ const FeedScreen = ({ navigation }) => {
     const [ fontloaded, setFontLoaded ] = useState(false)
     const [ users, setUsers ] = useState([])
     const [ isLoading, setIsLoading ] = useState(true)
+
 
     getPhotosFromUrl = async () => {
         const res = await fetch('https://randomuser.me/api/?results=10')
@@ -46,21 +59,39 @@ const FeedScreen = ({ navigation }) => {
 
     flatlistStories = ({item}) => {       
         return(
-          <TouchableOpacity  style={{height:180,width:110,marginRight:7,
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowRadius: 6,
-            shadowOpacity: 0.6,}} onPress={()=>Haptics.impactAsync('light')}>
-            <View  style={{height:180,width:110}}>
+          <TouchableOpacity  style={{height:null,width:null,marginRight:7}} onPress={()=>Haptics.impactAsync('light')}>
+            <View style={{height:180,width:110,
+                    shadowOffset: {
+                            width: 0,
+                            height: 2,
+                        },
+                        shadowRadius: 6,
+                        shadowOpacity: 0.6}}>
                 <View style={{flex:1}}>
                   <Image source={{uri:item.picture.large}}style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:20}}/>
+                  <LinearGradient
+                        colors={['transparent','rgba(0,0,0,0.4)', ]}
+                        style={{
+                            position: 'absolute',
+                            height:180,
+                            width:110,
+                            borderRadius:20}}
+                    />
+                    <Text style={{position:'absolute',color:'white',top:150,fontSize:12,alignSelf:'center',fontFamily:'Nunito'}}>
+                        {item.name.first}
+                    </Text>
+                    <Image style={{height:50,width:50,borderRadius:25,
+                        position:'absolute',
+                        alignSelf:'center',
+                        borderWidth:.5,
+                        borderColor:'black',
+                        top:65}} source={{uri:item.picture.thumbnail}}/>
                 </View>
             </View>
           </TouchableOpacity>
         )
       }
+
 
 
 
@@ -76,52 +107,19 @@ const FeedScreen = ({ navigation }) => {
     return(
         <SafeAreaView style={{flex:1}}>
 
-            <View style={{flex:1,paddingLeft:width/1.8,position:'absolute',zIndex:-10}}>
-                <View style={{height:350,width:350,borderRadius:175,backgroundColor:'rgb(240,237,237)'}}/>
-            </View>
+            <FeedScreenCircle/>
 
             <View style={{flex:1}}>
 
-                <View style={{flexDirection:'row', paddingLeft:20,paddingTop:20}}>
-                    <Text style={{fontSize:42,fontWeight:'bold', fontFamily:'Nunito',flex: .3}}>
-                        Hello,
-                    </Text>
-                    <View style={{flex:.65,alignItems:'flex-end',justifyContent:'flex-end',
-                        shadowOffset: {
-                            width: 0,
-                            height: 2,
-                        },
-                        shadowRadius: 6,
-                        shadowOpacity: 0.6,
-                        }}>
-                        <Image style={{height:50,width:50,borderRadius:25}} source={require('../assets/pic1.jpeg')}/>
-                        <View style={{height:15,width:15,borderRadius:7.5,backgroundColor:'rgb(87,117,206)', position:'absolute',top:5,right:2}}/>
-                    </View>
-                </View>
+                <FeedTitleHello/>
+    
+                <FeedTitleUserName/>
 
-                <View style={{flexDirection:'row', paddingLeft:20}}>
-                    <Text style={{fontSize:42,fontWeight:'bold', fontFamily:'Nunito',flex: 1}}>
-                        Katherine
-                    </Text>
-                </View>
-                
+            <ScrollView scrollEventThrottle={16}>
 
-                <View style={{paddingHorizontal:20}}>
-                    <Header transparent>
-                        <Left>
-                            <Text style={{fontFamily:'Nunito', fontSize:20,fontWeight:'bold'}}>
-                                Story
-                            </Text>
-                        </Left>
-                        <Right>
-                            <Text style={{fontFamily:'Nunito',fontSize:18,color:'rgb(117,117,117)',fontWeight:'bold'}}>
-                                view all
-                            </Text>
-                        </Right>
-                    </Header>
-                </View>
+                <FeedHeader1/>
 
-                <View style={{flex:1, flexDirection:'row'}}>
+                <View style={{height:210,flexDirection:'row'}}>
 
                     <FlatList
                     showsHorizontalScrollIndicator={false}
@@ -131,20 +129,96 @@ const FeedScreen = ({ navigation }) => {
                     renderItem={flatlistStories}
                     contentContainerStyle={{height:200,paddingVertical:15,paddingHorizontal:20}}
                     ListHeaderComponent={
-                        <View  style={{height:180,width:110,marginRight:7,
-                            shadowOffset: {
-                                width: 0,
-                                height: 2,
-                            },
-                            shadowRadius: 6,
-                            shadowOpacity: 0.6,}}>
-                            <View style={{flex:1}}>
-                                <Image source={require('../assets/pic1.jpeg')}style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:20,}}/>
+                        <TouchableOpacity>
+                            <View  style={{height:180,width:110,marginRight:7,
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowRadius: 6,
+                                shadowOpacity: 0.6}}>
+                                <View style={{flex:1}}>
+                                    <Image source={require('../assets/pic1.jpeg')}style={{flex:1,height:null,width:null,resizeMode:'cover',borderRadius:20,}}/>
+                                    <LinearGradient
+                                        colors={['transparent','rgba(0,0,0,0.4)', ]}
+                                        style={{
+                                            position: 'absolute',
+                                            height:180,
+                                            width:110,
+                                            borderRadius:20}}
+                                    />
+                                        <Text style={{position:'absolute',color:'white',top:150,fontSize:12,alignSelf:'center',fontFamily:'Nunito'}}>
+                                            Add to Your Story
+                                        </Text>
+                                        <Image style={{height:50,width:50,borderRadius:25,
+                                            position:'absolute',
+                                            alignSelf:'center',
+                                            borderWidth:.5,
+                                            borderColor:'black',
+                                            top:65}} source={require('../assets/pic1.jpeg')}/>
+                                </View>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                         }
                     />
-                    </View>
+                </View>
+
+                <View style={{paddingBottom:10}}>
+                    <Header transparent>
+                        <Left style={{paddingHorizontal:20}}>
+                            <Text style={{fontFamily:'Nunito', fontSize:20,fontWeight:'bold'}}>
+                                Activites
+                            </Text>
+                        </Left>
+                        <Right style={{justifyContent:'center'}}>
+                            <TouchableOpacity>
+                                <Text style={{fontFamily:'Nunito',fontSize:14,color:'rgb(117,117,117)',fontWeight:'bold'}}>
+                                    view all
+                                </Text>
+                            </TouchableOpacity>
+                        </Right>
+                        <Right style={{}}>
+                            <TouchableOpacity style={{borderWidth:.5,borderColor:'rgb(117,117,117)',paddingVertical:7,paddingHorizontal:22,borderRadius:20}}>
+                                <Text style={{fontFamily:'Nunito',fontSize:14,color:'rgb(87,117,206)',fontWeight:'bold'}}>
+                                    matches
+                                </Text>
+                            </TouchableOpacity>
+                        </Right>
+                    </Header>
+                </View>
+
+                <Card style={{flex: 1}}>
+                    <CardItem>
+                    <Body style={{flexDirection:'row'}}>
+                        <Image style={{height:300,width:width/1.5,borderRadius:20}} source={require('../assets/pic2.jpeg')}/>
+                        <Right>
+                            <View style={{flex:1, justifyContent:'flex-start'}}>
+                                <TouchableOpacity style={{paddingRight:20}}>
+                                    <MaterialCommunityIcons name='dots-vertical' size={20}/>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{paddingRight:20}}>
+                                    <MaterialCommunityIcons name='heart-outline' size={20}/>
+                                </TouchableOpacity>
+                                <Text style={{paddingRight:20}}>
+                                    12
+                                </Text>
+                                <TouchableOpacity style={{paddingRight:20}}>
+                                    <MaterialCommunityIcons name='message-outline' size={20}/>
+                                </TouchableOpacity>
+                                <Text style={{paddingRight:20}}>
+                                    56
+                                </Text>
+                            </View>
+                        </Right>
+                    </Body>
+
+                    </CardItem>
+                    <Right style={{alignSelf:"flex-end", paddingRight:20}}>
+                        <Text style={{fontFamily:'Nunito',fontSize:14,color:'rgb(117,117,117)',fontWeight:'bold'}}> 2 hours ago </Text>
+                    </Right>
+                </Card>
+
+            </ScrollView>
 
             </View>
         </SafeAreaView>
