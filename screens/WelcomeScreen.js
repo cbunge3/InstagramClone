@@ -7,19 +7,22 @@ import {
 } from "react-native";
 
 
-const SplashScreen = ({ navigation }) => {
+const WelcomeScreen = ({ navigation }) => {
     return(
     <View style={styles.container}>
-        <Text>SplashScreen</Text>
-        <Button title='Login Screen'
+        <Text>WelcomeScreen</Text>
+        <Button title='Login'
         onPress={()=> navigation.navigate('Login')}
+        />
+        <Button title='Register'
+        onPress={()=> navigation.navigate('Register')}
         />
 
 
     </View>
     )
 }
-export default SplashScreen;
+export default WelcomeScreen;
 
 const styles = StyleSheet.create({
     container: {

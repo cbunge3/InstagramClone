@@ -10,8 +10,8 @@ const LoginScreen = ({ navigation }) => {
     return(
         <View style={styles.container}>
             <Text>LoginScreen</Text>
-            <Button title='Register Screen'
-            onPress={()=> navigation.navigate('Register')}
+            <Button title='Go To Feed'
+            onPress={()=> navigation.navigate('Feed')}
             />
     
     

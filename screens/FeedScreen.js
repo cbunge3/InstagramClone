@@ -8,7 +8,8 @@ import {
     Dimensions,
     ScrollView,
     TouchableOpacity,
-    FlatList
+    FlatList,
+    Platform
 } from "react-native";
 import { 
     Container,
@@ -43,16 +44,18 @@ const FeedScreen = ({ navigation }) => {
     const [ fontloaded, setFontLoaded ] = useState(false)
     const [ users, setUsers ] = useState([])
     const [ isLoading, setIsLoading ] = useState(true)
-    const [ page, setPage ] = useState(1)
+
+ 
 
 
-
+//`https://api.unsplash.com/search/photos?page=5&per_page=30
+//https://api.unsplash.com/photos/random?count=30
 
     const axios = require('axios');
     loadWallpapers = () => {
         axios
           .get(
-            'https://api.unsplash.com/photos/random?count=30&client_id=cdd66b5e10edff3c50766086a5c53464963e241def2f481c8f851f3cd2a3c9d9'
+            `https://api.unsplash.com/photos/random?count=30&client_id=cdd66b5e10edff3c50766086a5c53464963e241def2f481c8f851f3cd2a3c9d9`
           )
           .then((response) => {
               console.log(response.data);
@@ -123,18 +126,21 @@ const FeedScreen = ({ navigation }) => {
                 <Body style={{flexDirection:'row'}}>
                     <Image style={{height:300,width:width/1.5,borderRadius:20}} source={{uri:item.urls.regular}}/>
                     <LinearGradient
-                        colors={['transparent','rgba(0,0,0,0.2)', ]}
+                        colors={['transparent','rgba(0,0,0,0.5)', ]}
                         style={{
                             position: 'absolute',
-                            height:300,
+                            top:50,
+                            height:250,
                             width:width/1.5,
                             borderRadius:20}}
                     />
                     <View style={{flex:1,position:'absolute',paddingLeft:20}}>
-                        <Text style={{fontFamily:'Nunito', fontSize:20,color:'white',
-                        alignSelf:'center',top:260}}>
-                            {item.user.first_name}, 23
-                        </Text>
+                        <TouchableOpacity>
+                            <Text style={{fontFamily:'Nunito', fontSize:20,color:'white',
+                            alignSelf:'center',top:260}}>
+                                {item.user.first_name}, 23
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                     <Right>
                         <View style={{flex:1, justifyContent:'flex-start'}}>
@@ -144,15 +150,19 @@ const FeedScreen = ({ navigation }) => {
                             <TouchableOpacity style={{paddingRight:20}}>
                                 <MaterialCommunityIcons name='heart-outline' size={20} color={'rgb(117,117,117)'}/>
                             </TouchableOpacity>
-                                <Text style={{paddingBottom:10,paddingLeft:3,color: 'rgb(117,117,117)', fontSize:12,fontFamily:'Nunito'}}>
+                            <TouchableOpacity style={{paddingRight:20}}>
+                                <Text style={{textAlign:'center',marginBottom:10,color: 'rgb(117,117,117)', fontSize:12,fontFamily:'Nunito'}}>
                                     {item.likes}
                                 </Text>
+                            </TouchableOpacity>
                             <TouchableOpacity style={{paddingRight:20}}>
                                 <MaterialCommunityIcons name='message-outline' size={20} color={'rgb(117,117,117)'}/>
                             </TouchableOpacity>
-                            <Text style={{paddingLeft:3,color:'rgb(117,117,117)', fontSize:12,fontFamily:'Nunito'}}>
+                            <TouchableOpacity style={{paddingRight:20}}>
+                            <Text style={{textAlign:'center',paddingLeft:3,color:'rgb(117,117,117)', fontSize:12,fontFamily:'Nunito'}}>
                                 {item.downloads}
                             </Text>
+                            </TouchableOpacity>
                         </View>
                     </Right>
                 </Body>
@@ -212,7 +222,7 @@ const FeedScreen = ({ navigation }) => {
     
                 <FeedTitleUserName/>
 
-            <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false}>
+                <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false} >
 
                 <FeedHeader1/>
 
@@ -291,7 +301,7 @@ const FeedScreen = ({ navigation }) => {
                 />
 
 
-            </ScrollView>
+                </ScrollView>
 
             </View>
         </SafeAreaView>
